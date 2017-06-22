@@ -2,5 +2,9 @@ __pycache__
 .vs
 env
 www
+<<<<<<< HEAD
 src/cardmapper/settings.py
+=======
+src/cardapp/settings.py
+>>>>>>> origin/master
 *.sqlite3
