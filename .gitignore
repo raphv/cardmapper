@@ -1,0 +1,6 @@
+__pycache__
+.vs
+env
+www
+src/cardmapper/settings.py
+*.sqlite3

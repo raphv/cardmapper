@@ -1,0 +1,18 @@
+{% extends 'cardapp/partial/common_list_detail.html' %}
+
+{% block specific_metadata %}
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+    </th>
+    <td>In deck <a href="{% url 'cardapp:deck_detail' pk=object.deck.pk %}">{{object.deck.title}}</a></td>
+</tr>
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
+    </th>
+    <td>
+        <a href="{{object.get_absolute_url}}#cardmaps">{{object.public_cardmaps.count}} card map(s) using this card</a>
+    </td>
+</tr>
+{% endblock %}

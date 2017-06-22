@@ -1,0 +1,13 @@
+{% extends 'cardapp/base.html' %}
+
+{% block title %}Deck: {{object.title}}{% endblock %}
+{% block header_title %}{{object.title}}{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:deck_list' %}">Decks</a></li>
+<li><a href="{% url 'cardapp:deck_detail' pk=object.pk %}">{{object.title}}</a></li>
+{% endblock %}
+
+{% block main_content %}
+{% include 'cardapp/partial/deck_detail.html' %}
+{% endblock %}

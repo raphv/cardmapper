@@ -1,0 +1,27 @@
+{% extends 'cardapp/partial/common_list_detail.html' %}
+
+{% block specific_metadata %}
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
+    </th>
+    <td>{{object.cards.get_public.count}} card(s) in this deck</td>
+</tr>
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+    </th>
+    <td>{{object.cardmaps.get_public.count}} card map(s) based on this deck</td>
+</tr>
+{% if object.url %}
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        <span class="sr-only">URL</span>
+    </th>
+    <td>
+        <a href="{{object.url}}" target="_blank">Details on {{object.get_url_host}}</a>
+    </td>
+</tr>
+{% endif %}
+{% endblock %}

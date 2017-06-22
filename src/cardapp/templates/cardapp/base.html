@@ -1,0 +1,68 @@
+﻿{% load bootstrap3 %}
+{% load staticfiles %}
+<!doctype html>
+<html{% if LANGUAGE_CODE %} lang="{{ LANGUAGE_CODE }}" {% endif %}>
+
+    <head>
+        <meta charset="utf-8">
+        <title>CardMapper: {% block title %}{% endblock %}</title>
+        
+        {% bootstrap_css %}
+        {% bootstrap_javascript jquery=True %}
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700,700i" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'cardapp/css/base.css' %}" />
+        {% block head_extra %}{% endblock %}
+    </head>
+
+    <body>
+    {% block nav %}
+        <nav class="navbar navbar-default navbar-fixed-top navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle menu</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{% url 'cardapp:home' %}">
+                        <strong>CardMapper</strong>
+                    </a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="{% block deck_list_active %}{% endblock %}">
+                            <a href="{% url 'cardapp:deck_list' %}">Decks</a>
+                        </li>
+                        <li class="{% block cardmap_list_active %}{% endblock %}">
+                            <a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a>
+                        </li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="https://github.com/raphv/cardmapper/" target="_blank">Source Code</a>
+                        </li>
+                    </div>
+            </div>
+        </nav>
+    {% endblock %}
+
+    {% block page_content %}
+        <div class="container">
+        {% block header %}
+            <ol class="breadcrumb">
+                <li><a href="{% url 'cardapp:home' %}">Home</a></li>
+                {% block next_breadcrumbs %}{% endblock %}
+            </ol>
+            <div class="page-header">
+                <h1>{% block header_title %}{% endblock %}</h1>
+            </div>
+        {% endblock %}
+        {% block main_content %}
+        {% endblock %}
+    {% endblock %}
+        </div>
+</body>
+
+</html>

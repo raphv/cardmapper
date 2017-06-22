@@ -1,0 +1,55 @@
+{% extends 'cardapp/partial/common_detail.html' %}
+
+{% block specific_metadata %}
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
+        Cards:
+    </th>
+    <td>
+        <a href="{% url 'cardapp:deck_cards' pk=object.pk %}">{{object.cards.get_public.count}} card(s) in this deck</a>
+    </td>
+</tr>
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+        Card Maps:
+    </th>
+    <td>
+        <a href="{% url 'cardapp:deck_cardmaps' pk=object.pk %}">{{object.cardmaps.get_public.count}} card map(s) based on this deck</a>
+    </td>
+</tr>
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+        URL:
+    </th>
+    <td>
+        {% if object.url %}
+        <a href="{{object.url}}" target="_blank">{{object.url}}</a>
+        {% else %}
+        —
+        {% endif %}
+    </td>
+</tr>
+{% endblock %}
+
+{% block below_table %}
+
+<div class="panel-body">
+    <p class="text-right">
+        <a class="btn btn-primary" href="{% url 'cardapp:deck_cards' pk=object.pk %}">
+            <span class="glyphicon glyphicon-modal-window" aria-hidden="true"></span>
+            <span>Show cards in this deck</span>
+            <span class="badge">{{object.cards.get_public.count}}</span>
+        </a>
+    </p>
+    <p class="text-right">
+        <a class="btn btn-primary" href="{% url 'cardapp:deck_cardmaps' pk=object.pk %}">
+            <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+            <span>Show card maps based on this deck</span>
+            <span class="badge">{{object.cardmaps.get_public.count}}</span>
+        </a>
+    </p>
+</div>
+{% endblock %}
