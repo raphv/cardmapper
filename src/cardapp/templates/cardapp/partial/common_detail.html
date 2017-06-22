@@ -1,0 +1,58 @@
+<div class="row">
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Description
+            </div>
+            <div class="panel-body"{% if object.background_color %} style="background-color: {{object.background_color}};"{% endif %}>
+                {{object.get_content_html}}
+                {% block image %}
+                {% if object.image %}
+                <img src="{{object.medium_image.url}}" class="img-responsive center-block" />
+                {% endif %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <div class="panel panel-info">
+            <div class="panel-heading">
+                Details
+            </div>
+            <table class="table table-condensed table-striped">
+                <tr>
+                    <th>
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        Author:
+                    </th>
+                    <td>{{object.author|default:"—"}}</td>
+                </tr>
+                <tr>
+                    {% if object.public %}
+                    <th>
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                        Visibility:
+                    </th>
+                    <td>Public</td>
+                    {% else %}
+                    <th>
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                        Visibility:
+                    </th>
+                    <td>Private</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th>
+                        <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
+                        Tag(s):
+                    </th>
+                    <td>{{object.get_tag_texts|default:"—"}}</td>
+                </tr>
+                {% block specific_metadata %}
+                {% endblock %}
+            </table>
+            {% block below_table %}{% endblock %}
+        </div>
+    </div>
+</div>

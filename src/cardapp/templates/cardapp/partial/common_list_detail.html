@@ -1,0 +1,49 @@
+<div class="col-xs-12 col-sm-6 col-md-4">
+    <div class="thumbnail"{% if object.background_color %} style="background-color: {{object.background_color}};"{% endif %}>
+        {% if object.image %}
+        <a href="{{object.get_absolute_url}}">
+            <img src="{{object.thumbnail.url}}" alt="Image for {{object.title}}" />
+        </a>
+        {% endif %}
+        <div class="caption">
+            <h4>
+                <a href="{{object.get_absolute_url}}">{{object.title}}</a>
+            </h4>
+            <p>{{object.get_short_content}}</p>
+        {% if not collapse_details %}
+            <table class="table table-condensed">
+                {% if object.author %}
+                <tr>
+                    <th>
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                        <span class="sr-only">Author</span>
+                    </th>
+                    <td>{{object.author}}</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    {% if object.public %}
+                    <th>
+                        <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+                    </th>
+                    <td>Public</td>
+                    {% else %}
+                    <th>
+                        <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                    </th>
+                    <td>Private</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th>
+                        <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
+                        <span class="sr-only">Tags</span>
+                    </th>
+                    <td>{{object.get_tag_texts|default:"—"}}</td>
+                </tr>
+                {% block specific_metadata %}{% endblock %}
+            </table>
+        {% endif %}
+        </div>
+    </div>
+</div>

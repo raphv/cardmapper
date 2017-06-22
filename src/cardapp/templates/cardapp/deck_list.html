@@ -1,0 +1,18 @@
+{% extends 'cardapp/base.html' %}
+
+{% block title %}All decks{% endblock %}
+{% block header_title %}CardMapper: All decks{% endblock %}
+{% block deck_list_active %}active{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:deck_list' %}">Decks</a></li>
+{% endblock %}
+
+{% block main_content %}
+<h3>{{object_list.count}} deck{{object_list.count|pluralize}}</h3>
+<div class="row">
+    {% for object in object_list %}
+    {% include "cardapp/partial/deck_list_detail.html" %}
+    {% endfor %}
+</div>
+{% endblock %}

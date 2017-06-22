@@ -1,0 +1,22 @@
+{% extends 'cardapp/base.html' %}
+
+{% block title %}Cards: {{object.title}}{% endblock %}
+{% block header_title %}{{object.title}}{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:deck_list' %}">Decks</a></li>
+<li><a href="{% url 'cardapp:deck_detail' pk=object.deck.pk %}">{{object.deck.title}}</a></li>
+<li><a href="{% url 'cardapp:card_detail' pk=object.pk %}">{{object.title}}</a></li>
+{% endblock %}
+
+{% block main_content %}
+{% include 'cardapp/partial/card_detail.html' %}
+
+<h3 id="cardmaps">{{cardmaps.count}} card map{{cardmaps.count|pluralize}} using this card</h3>
+<div class="row">
+    {% for object in cardmaps %}
+    {% include "cardapp/partial/cardmap_list_detail.html" %}
+    {% endfor %}
+</div>
+
+{% endblock %}
