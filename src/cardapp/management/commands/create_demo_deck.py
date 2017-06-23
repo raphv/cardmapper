@@ -54,13 +54,18 @@ class Command(BaseCommand):
         ystep = cardmap.image_height // 4
         y = -(ystep // 2)
 
-        cardvalues = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King', 'Ace']
-        suites = ['diamond', 'heart', 'club', 'spade']
+        cardvalues = [
+            '2', '3', '4', '5', '6', '7', '8',
+            '9', '10', 'Jack', 'Queen', 'King', 'Ace',
+        ]
+        suites = [
+            'diamond', 'club', 'heart', 'spade'
+        ]
         suitecolors = {
             'diamond': '#ffcccc',
             'heart': '#ffcccc',
             'spade': '#cccccc',
-            'club': '#cccccc'
+            'club': '#cccccc',
         }
         valuetags = {}
         for value in cardvalues:

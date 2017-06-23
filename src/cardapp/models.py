@@ -38,7 +38,7 @@ class Tag(models.Model):
 def filter_visible_to_user(queryset, user=None):
     if user and user.is_authenticated:
         return queryset.filter(
-            models.Q(public=True) | models.Q(author=user_obj)
+            models.Q(public=True) | models.Q(author=user)
         )
     return queryset.filter(public=True)
 
