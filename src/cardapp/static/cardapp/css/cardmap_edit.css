@@ -1,0 +1,30 @@
+#edit_map {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 220px;
+    bottom: 0;
+}
+
+#edit_bar {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 220px;
+    bottom: 50px;
+    overflow: auto;
+    padding: 10px 0;
+}
+
+#save_buttons {
+    position: absolute;
+    right: 0;
+    width: 220px;
+    bottom: 0;
+    height: 50px;
+    padding: 10px;
+}
+
+#popup-template {
+    display: none;
+}

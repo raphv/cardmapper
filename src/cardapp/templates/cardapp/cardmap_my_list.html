@@ -1,0 +1,26 @@
+{% extends 'cardapp/base.html' %}
+
+{% block title %}All Card Maps{% endblock %}
+{% block header_title %}All Card Maps{% endblock %}
+{% block cardmap_my_list_active %}active{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a></li>
+{% endblock %}
+
+{% block main_content %}
+<p class="text-right">
+    <a href="{% url 'cardapp:cardmap_create' %}" class="btn btn-lg btn-primary">
+        <span class="glyphicon glyphicon-star" aria-hidden="true"></span>
+        <span class="glyphicon glyphicon-blackboard" aria-hidden="true"></span>
+        Create a new card map!
+    </a>
+</p>
+<h3>{{object_list.count}} card map{{object_list.count|pluralize}}</h3>
+<div class="row">
+    {% for object in object_list %}
+    {% include "cardapp/partial/cardmap_list_detail.html" %}
+    {% endfor %}
+</div>
+{% endblock %}

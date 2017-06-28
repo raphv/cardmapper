@@ -1,0 +1,90 @@
+{% extends 'cardapp/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Card map: {{object.title}}{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.0.3/dist/leaflet.js"></script>
+
+<link rel="stylesheet" href="{% static 'cardapp/css/cardmap_edit.css' %}" />
+<script>
+    window.IMAGE_URL = "{{object.image.url}}";
+    window.IMAGE_WIDTH = {{object.image_width|default:1000}};
+    window.IMAGE_HEIGHT = {{object.image_height|default:1000}};
+    window.CARDS_JSON = {{cards_json|safe}};
+</script>
+<script src="{% static 'cardapp/js/cardmap_edit.js' %}"></script>
+{% endblock %}
+
+{% block header_title %}{{object.title}}{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_detail' pk=object.pk %}">{{object.title}}</a></li>
+{% endblock %}
+
+{% block page_content %}
+
+<div id="edit_map"></div>
+
+{% with cardlist=cardmap.deck.cards.all %}
+<div id="edit_bar">
+    <div class="container-fluid">
+        <div class="alert alert-success">
+            <h5>Drag and drop cards from this list onto the map</h5>
+        </div>
+        {% for object in cardlist %}
+        <div class="panel panel-info draggable-card-item" draggable="true" data-card-id="{{object.id}}" data-search-index="{{object.title|lower}} {{object.tag_texts|lower}}">
+            <div class="panel-body" style="background-color: {{object.background_color}};">
+                <h4>{{object.title}}</h4>
+                <button class="btn btn-sm btn-primary btn-block" data-toggle="modal" data-target="#card_modal_{{object.id}}">
+                    <span class="glyphicon glyphicon-question" aria-hidden="true"></span>
+                    Details about card
+                </button>
+                <button class="btn btn-sm btn-success btn-block add-to-map-center">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    Add to map center
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<div id="save_buttons">
+    <form method="post" id="update-form">
+        {% csrf_token %}
+        <input type="hidden" name="data" id="data_field" value="" />
+        <button type="submit" class="btn btn-block btn-primary">Save</button>
+    </form>
+</div>
+<div id="popup-template">
+    <h3>[Title]</h3>
+    <button class="btn btn-sm btn-primary btn-block popup-modal">
+        <span class="glyphicon glyphicon-question" aria-hidden="true"></span>
+        Details
+    </button>
+    <button class="btn btn-sm btn-danger btn-block popup-remove">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        Delete
+    </button>
+</div>
+
+{% for object in cardlist %}
+<div class="modal fade" tabindex="-1" role="dialog" id="card_modal_{{object.id}}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">{{object.title}}</h4>
+            </div>
+            <div class="modal-body">
+                {% include 'cardapp/partial/card_detail.html' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endwith %}
+
+{% endblock %}

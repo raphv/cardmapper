@@ -1,0 +1,34 @@
+{% extends 'cardapp/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}Card Map: “{{object.title}}”: Edit Metadata{% endblock %}
+{% block header_title %}Edit metadata for “{{object.title}}”{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_detail' pk=object.pk %}">{{object.title}}</a></li>
+<li><a href="{% url 'cardapp:cardmap_edit_metadata' pk=object.pk %}">Edit Metadata</a></li>
+{% endblock %}
+
+{% block main_content %}
+<form method="POST" enctype="multipart/form-data">
+    {{form.media}}
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.title %}
+    <div class="form-group">
+        {{form.description.label_tag}}
+        <div>{{form.description}}</div>
+    </div>
+    {% bootstrap_field form.image %}
+    {% bootstrap_field form.deck %}
+    {% bootstrap_field form.public %}
+    {% bootstrap_field form.tag_list %}
+    <p class="text-right">
+        <a class="btn btn-lg btn-warning" href="{% url 'cardapp:cardmap_edit_map' pk=object.pk %}">Edit map without updating metadata</a>
+        <button type="submit" class="btn btn-lg btn-primary">Save metadata and edit map</button>
+    </p>
+</form>
+{% endblock %}

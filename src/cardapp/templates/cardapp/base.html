@@ -34,10 +34,13 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li class="{% block deck_list_active %}{% endblock %}">
-                            <a href="{% url 'cardapp:deck_list' %}">Decks</a>
+                            <a href="{% url 'cardapp:deck_list' %}">All Decks</a>
                         </li>
                         <li class="{% block cardmap_list_active %}{% endblock %}">
-                            <a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a>
+                            <a href="{% url 'cardapp:cardmap_list' %}">All Card Maps</a>
+                        </li>
+                        <li class="{% block cardmap_my_list_active %}{% endblock %}">
+                            <a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a>
                         </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
@@ -51,7 +54,7 @@
 
     {% block page_content %}
         <div class="container">
-        {% block header %}
+            {% block header %}
             <ol class="breadcrumb">
                 <li><a href="{% url 'cardapp:home' %}">Home</a></li>
                 {% block next_breadcrumbs %}{% endblock %}
@@ -59,11 +62,11 @@
             <div class="page-header">
                 <h1>{% block header_title %}{% endblock %}</h1>
             </div>
-        {% endblock %}
-        {% block main_content %}
-        {% endblock %}
-    {% endblock %}
+            {% endblock %}
+            {% block main_content %}
+            {% endblock %}
         </div>
+    {% endblock %}
 </body>
 
 </html>

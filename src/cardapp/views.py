@@ -1,8 +1,14 @@
 import json
-from django.shortcuts import render
-from django.http import Http404
-from django.views.generic import TemplateView, DetailView, ListView
-from .models import Deck, CardMap, Card, filter_visible_to_user
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.shortcuts import redirect
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponseBadRequest
+from django.views.decorators.http import require_POST
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView
+from django.urls import reverse
+from .models import Deck, CardMap, Card, CardOnCardMap, filter_visible_to_user
+from .forms import CardMapForm
 
 class VisibleToUserListView(ListView):
 
@@ -18,7 +24,13 @@ class VisibleToUserDetailView(DetailView):
         res = super(VisibleToUserDetailView, self).get_object(**kwargs)
         if res.public or res.author == self.request.user:
             return res
-        raise Http404
+        raise PermissionDenied
+
+@method_decorator(login_required, name='dispatch')
+class OwnItemsListView(ListView):
+    
+    def get_queryset(self, **kwargs):
+        return super(OwnItemsListView, self).get_queryset(**kwargs).filter(author=self.request.user)
 
 class HomeView(TemplateView):
 
@@ -81,6 +93,11 @@ class CardmapListView(VisibleToUserListView):
     
     template_name = "cardapp/cardmap_list.html"
     model = CardMap
+    
+class MyCardmapsListView(OwnItemsListView):
+    
+    template_name = "cardapp/cardmap_my_list.html"
+    model = CardMap
 
 class CardmapDetailView(VisibleToUserDetailView):
     
@@ -93,6 +110,89 @@ class CardmapDetailView(VisibleToUserDetailView):
             'x': card.x,
             'y': card.y,
             'id': card.id,
+            'title': card.card.title,
+        } for card in context['object'].cardoncardmap_set.all()])
+        return context
+
+@method_decorator(login_required, name='dispatch')
+class CardmapCreateView(CreateView):
+
+    template_name = "cardapp/cardmap_create.html"
+    model = CardMap
+    form_class = CardMapForm
+
+    def get_success_url(self):
+        return reverse(
+            'cardapp:cardmap_edit_map',
+            kwargs={'pk':self.pk}
+        )
+    
+    def get_form_kwargs(self, *args, **kwargs):
+        res = super(CardmapCreateView, self).get_form_kwargs(*args, **kwargs)
+        res['user'] = self.request.user
+        return res
+
+@method_decorator(login_required, name='dispatch')
+class CardmapEditMetadataView(UpdateView):
+
+    template_name = "cardapp/cardmap_edit_metadata.html"
+    model = CardMap
+    form_class = CardMapForm
+
+    def get_success_url(self):
+        return reverse(
+            'cardapp:cardmap_edit_map',
+            kwargs={'pk':self.pk}
+        )
+
+    def get_object(self, *args, **kwargs):
+        obj = super(CardmapEditMetadataView, self).get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_form_kwargs(self, *args, **kwargs):
+        res = super(CardmapEditMetadataView, self).get_form_kwargs(*args, **kwargs)
+        res['user'] = self.request.user
+        return res
+    
+@method_decorator(login_required, name='dispatch')
+class CardmapEditMapView(DetailView):
+    
+    template_name = "cardapp/cardmap_edit_map.html"
+    model = CardMap
+
+    def post(self, *args, **kwargs):
+        cardmap = self.get_object()
+        try:
+            data = json.loads(self.request.POST['data'])
+            cardmap.cardoncardmap_set.all().delete()
+            CardOnCardMap.objects.bulk_create([
+                CardOnCardMap(
+                    cardmap = cardmap,
+                    card_id = card['card_id'],
+                    x = card['x'],
+                    y = card['y'],
+                )
+                for card in data
+            ])
+        except:
+            return HttpResponseBadRequest()
+        return redirect(cardmap)
+    
+    def get_object(self, *args, **kwargs):
+        obj = super(CardmapEditMapView, self).get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied
+        return obj
+    
+    def get_context_data(self, **kwargs):
+        context = super(CardmapEditMapView, self).get_context_data(**kwargs)
+        context['cards_json'] = json.dumps([{
+            'x': card.x,
+            'y': card.y,
+            'id': card.id,
+            'card_id': str(card.card.id),
             'title': card.card.title,
         } for card in context['object'].cardoncardmap_set.all()])
         return context

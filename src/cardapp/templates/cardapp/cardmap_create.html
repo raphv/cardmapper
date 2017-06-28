@@ -1,0 +1,32 @@
+{% extends 'cardapp/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}Create new card map{% endblock %}
+{% block header_title %}CardMapper: Create new card map{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_create' %}">Create a Card Map</a></li>
+{% endblock %}
+
+{% block main_content %}
+<form method="POST" enctype="multipart/form-data">
+    {{form.media}}
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.title %}
+    <div class="form-group">
+        {{form.description.label_tag}}
+        <div>{{form.description}}</div>
+    </div>
+    {% bootstrap_field form.image %}
+    {% bootstrap_field form.deck %}
+    {% bootstrap_field form.public %}
+    {% bootstrap_field form.tag_list %}
+    <p class="text-right">
+        <button type="submit" class="btn btn-lg btn-primary">Create Card Map</button>
+    </p>
+</form>
+{% endblock %}

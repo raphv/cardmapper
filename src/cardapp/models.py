@@ -120,8 +120,10 @@ class MetadataModel(models.Model):
     public = models.BooleanField(
         default=True,
         db_index=True,
+        help_text = 'Make it visible to all users. When unchecked, only you will be able to see it',
     )
     objects = PublicObjectManager()
+    _tag_list = None
     
     def get_content_html(self):
         return mark_safe(self.description)
@@ -132,11 +134,30 @@ class MetadataModel(models.Model):
     def get_short_content(self):
         return truncatechars(self.get_content_text(),200)
 
-    def get_tag_list(self):
-        return [tag.name for tag in self.tags.all()]
-
+    @property
+    def tag_list(self):
+        if self._tag_list is None:
+            if self.pk:
+                self._tag_list = [tag.name for tag in self.tags.all()]
+            else:
+                self._tag_list = []
+        return self._tag_list
+    
+    @tag_list.setter
+    def tag_list(self, value):
+        self._tag_list = value
+    
+    @property
+    def flat_tag_list(self):
+        return (",").join(self.tag_list)
+    
+    @flat_tag_list.setter
+    def flat_tag_list(self, value):
+        tags = [t.strip() for t in value.split(",")]
+        self.tag_list = [t for t in tags if t]
+    
     def get_tag_texts(self):
-        return ", ".join(self.get_tag_list())
+        return ", ".join(self.tag_list)
 
     def get_absolute_url(self):
         return reverse(
@@ -146,6 +167,18 @@ class MetadataModel(models.Model):
 
     def __str__(self):
         return self.title or '<Untitled>'
+    
+    def save(self, *args, **kwargs):
+        super(MetadataModel, self).save(*args, **kwargs)
+        new_tag_list = self.tag_list
+        old_tag_list = [tag.name for tag in self.tags.all()]
+        for tag in old_tag_list:
+            if tag not in new_tag_list:
+                self.tags.get(name=tag).delete()
+        for tag in new_tag_list:
+            if tag not in old_tag_list:
+                tagobj, created = Tag.objects.get_or_create(name=tag)
+                self.tags.add(tagobj)
 
     class Meta:
         abstract = True
@@ -174,6 +207,9 @@ class Card(MetadataModel):
     @cached_property
     def public_cardmaps(self):
         return self.get_all_cardmaps().filter(public=True).distinct()
+
+    def __str__(self):
+        return "%s (in %s)"%(self.title, self.deck.title)
 
 class CardMap(MetadataModel):
     deck = models.ForeignKey(

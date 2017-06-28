@@ -41,7 +41,7 @@ class DeckAdmin(admin.ModelAdmin):
 @admin.register(Card)
 class CardAdmin(admin.ModelAdmin):
     actions = (make_public, make_private)
-    list_display = ('__str__', 'author', 'public', 'deck', tag_list, 'admin_thumbnail')
+    list_display = ('title', 'author', 'public', 'deck', tag_list, 'admin_thumbnail')
     readonly_fields = ('admin_thumbnail',)
     list_filter = ('author', 'public', 'deck')
     admin_thumbnail = AdminThumbnail(image_field='thumbnail')
