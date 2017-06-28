@@ -124,7 +124,7 @@ class CardmapCreateView(CreateView):
     def get_success_url(self):
         return reverse(
             'cardapp:cardmap_edit_map',
-            kwargs={'pk':self.pk}
+            kwargs={'pk':self.object.pk}
         )
     
     def get_form_kwargs(self, *args, **kwargs):
@@ -142,7 +142,7 @@ class CardmapEditMetadataView(UpdateView):
     def get_success_url(self):
         return reverse(
             'cardapp:cardmap_edit_map',
-            kwargs={'pk':self.pk}
+            kwargs={'pk':self.object.pk}
         )
 
     def get_object(self, *args, **kwargs):

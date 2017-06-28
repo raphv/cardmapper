@@ -6,7 +6,7 @@ from urllib.parse import urlsplit
 from django.conf import settings
 from django.db import models
 from django.template.defaultfilters import truncatechars
-from django.utils.html import strip_tags
+from django.utils.html import strip_tags, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.functional import cached_property
 from django.urls import reverse
@@ -125,14 +125,23 @@ class MetadataModel(models.Model):
     objects = PublicObjectManager()
     _tag_list = None
     
-    def get_content_html(self):
+    def get_description_html(self):
         return mark_safe(self.description)
     
-    def get_content_text(self):
+    @property
+    def description_text(self):
         return HTMLParser().unescape(strip_tags(self.description))
+
+    @description_text.setter
+    def description_text(self, value):
+        self.description = format_html_join(
+            '\n',
+            '<p>{}</p>',
+            ((part,) for part in value.split("\n"))
+        )
     
-    def get_short_content(self):
-        return truncatechars(self.get_content_text(),200)
+    def get_short_description(self):
+        return truncatechars(self.description_text,200)
 
     @property
     def tag_list(self):

@@ -1,7 +1,7 @@
 import json
 from django.core.management.base import BaseCommand, CommandError
 from django.core.files.base import ContentFile
-from cardapp.models import Deck, Card, CardMap, CardOnCardMap, Tag
+from cardapp.models import Deck, Card, CardMap, CardOnCardMap
 from django.utils.html import format_html
 from urllib.request import urlopen
 from urllib.parse import urlencode
@@ -18,38 +18,30 @@ class Command(BaseCommand):
             except Exception as e:
                 print("Couldn't retrieve %s: %s"%(url, e))
         
-        demotag, created = Tag.objects.get_or_create(name = 'Demo')
-
         deck = Deck.objects.create(
             title = 'Playing cards demo deck',
-            description = format_html(
-                '<p>{}</p>',
-                'This is a standard 52-card deck'
-            ),
+            description_text = 'This is a standard 52-card deck',
             url = 'https://en.wikipedia.org/wiki/Standard_52-card_deck',
             public = True,
+            tag_list = ['Demo'],
         )
         download_image(
             "https://upload.wikimedia.org/wikipedia/commons/0/0a/Deck_of_cards_used_in_the_game_piquet.jpg",
             "democards.jpg",
             deck,
         )
-        deck.tags.add(demotag)
 
         cardmap = CardMap.objects.create(
             title = 'Playing cards demo card map',
-            description = format_html(
-                '<p>{}</p>',
-                'This is a photo of a 52-card deck taken from Wikipedia'
-            ),
+            description_text = 'This is a photo of a 52-card deck taken from Wikipedia',
             deck = deck,
+            tag_list = ['Demo'],
         )
         download_image(
             "https://upload.wikimedia.org/wikipedia/commons/0/02/Piatnikcards.jpg",
             "democards.jpg",
             cardmap,
         )
-        cardmap.tags.add(demotag)
         xstep = cardmap.image_width // 13
         ystep = cardmap.image_height // 4
         y = -(ystep // 2)
@@ -62,34 +54,26 @@ class Command(BaseCommand):
             'diamond', 'club', 'heart', 'spade'
         ]
         suitecolors = {
-            'diamond': '#ffcccc',
-            'heart': '#ffcccc',
-            'spade': '#cccccc',
-            'club': '#cccccc',
+            'diamond': '#ff0000',
+            'heart': '#ff0000',
+            'spade': '#000000',
+            'club': '#000000',
         }
-        valuetags = {}
-        for value in cardvalues:
-            valuetag, created = Tag.objects.get_or_create(name = value)
-            valuetags[value] = valuetag
         for suite in suites:
             y += ystep
-            suitetag, created = Tag.objects.get_or_create(name = suite.capitalize())
             x = -(xstep // 2)
             for value in cardvalues:
                 x += xstep
                 cardname = "%s of %ss"%(value, suite)
                 print("Processing %s"%cardname)
-                valuetag = valuetags[value]
                 card = Card.objects.create(
                     deck = deck,
                     title = cardname,
-                    description = format_html('<p>{}</p>', cardname),
+                    description_text = cardname,
                     background_color = suitecolors[suite],
                     public = True,
+                    tag_list = ['Demo', suite.capitalize(), value]
                 )
-                card.tags.add(suitetag)
-                card.tags.add(valuetag)
-                card.tags.add(demotag)
                 apiurl = "https://commons.wikimedia.org/w/api.php?%s"%(urlencode({
                     "action": "query",
                     "titles": "File:Playing_card_%s_%s.svg"%(suite, value if value == '10' else value[0] ),

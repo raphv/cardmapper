@@ -25,7 +25,7 @@ $(function () {
             { "draggable": true }
         );
         var $popup = $("#popup-template").clone();
-        $popup.removeProp("id")
+        $popup.removeAttr("id")
         $popup.find("h3").text(card_title);
         $popup.find("button.popup-modal").click(function () {
             $("#card_modal_" + card_id).modal("show");
@@ -59,7 +59,7 @@ $(function () {
 
     $('div.draggable-card-item').on('dragstart', function (event) {
         var $this = $(this);
-        event.originalEvent.dataTransfer.setData('application/card-id', $this.prop("data-card-id"));
+        event.originalEvent.dataTransfer.setData('application/card-id', $this.attr("data-card-id"));
         event.originalEvent.dataTransfer.setData('application/card-title', $this.find("h4").text());
         event.originalEvent.dataTransfer.effectAllowed = 'copy';
     });
@@ -83,7 +83,7 @@ $(function () {
         var $card = $(this).parents("div.draggable-card-item");
         var map_center = map.getCenter();
         var card_title = $card.find("h4").text();
-        var card_id = $card.prop("data-card-id");
+        var card_id = $card.attr("data-card-id");
         addMarkerToMap(card_id, card_title, map_center.lng, map_center.lat, true);
     });
 

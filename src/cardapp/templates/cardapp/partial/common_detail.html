@@ -4,8 +4,8 @@
             <div class="panel-heading">
                 Description
             </div>
-            <div class="panel-body"{% if object.background_color %} style="background-color: {{object.background_color}};"{% endif %}>
-                {{object.get_content_html}}
+            <div class="panel-body"{% if object.background_color %} style="border: 10px solid {{object.background_color}};"{% endif %}>
+                {{object.get_description_html}}
                 {% block image %}
                 {% if object.image %}
                 <img src="{{object.medium_image.url}}" class="img-responsive center-block" />

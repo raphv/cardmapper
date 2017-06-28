@@ -16,12 +16,15 @@ Take a photo of the table or wall you’ve put the cards on, upload it, and match 
 
 Make your Card Map public: share the link to take away the outcome of the workshop, and add your Card Map to the database to share your insights with other ideation card users.
 
-## Current status and roadmap
+## Roadmap
 
-Cardmapper is currently a read-only demo. Future work includes:
+Deck import scripts have been added. "Scrapers" to generate decks from existing ideation cards are in a separate repository
 
-  * Adding user registration
-  * Adding an authoring interface for cardmaps
-  * Adding an authoring interface for decks and cards
+Future work includes:
+
+  * Adding user registration *(will be done using django-allauth)*
+  * Adding an authoring interface for decks and cards *(low priority as this is currently available through the admin interface)*
   * Making the database searchable
-  * Adding a robust rights management interface
+  * Adding a robust rights management interface *(sharing with a group, sharing through a private URL)*
+  * Printing decks from the database
+  * Automatic card detection from "card map" images *(using computer vision, with or without the need for printed markers)*
