@@ -6,9 +6,18 @@
     bottom: 0;
 }
 
-#edit_bar {
+#search_bar {
     position: absolute;
     top: 50px;
+    right: 0;
+    width: 220px;
+    height: 50px;
+    padding: 10px 0;
+}
+
+#edit_bar {
+    position: absolute;
+    top: 100px;
     right: 0;
     width: 220px;
     bottom: 50px;
@@ -27,4 +36,8 @@
 
 #popup-template {
     display: none;
+}
+
+span.highlight {
+    background-color: #ffff80;
 }

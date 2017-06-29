@@ -29,6 +29,11 @@
 <div id="edit_map"></div>
 
 {% with cardlist=cardmap.deck.cards.all %}
+<div id="search_bar">
+    <div class="container-fluid">
+        <input type="search" placeholder="Search for a card" id="search-field" class="form-control" />
+    </div>
+</div>
 <div id="edit_bar">
     <div class="container-fluid">
         <div class="alert alert-success">
