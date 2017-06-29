@@ -18,11 +18,15 @@ Make your Card Map public: share the link to take away the outcome of the worksh
 
 ## Roadmap
 
-Deck import scripts have been added. "Scrapers" to generate decks from existing ideation cards are in a separate repository
+Deck import scripts have been added.
+"Scrapers" to generate decks from existing ideation cards are in a separate repository at [https://github.com/raphv/cardmapper-scrapers/]
 
 Future work includes:
 
   * Adding user registration *(will be done using django-allauth)*
+  * Simplifying tag input with jquery-tagit
+  * Adding/editing annotations
+  * Nicer markers on card maps
   * Adding an authoring interface for decks and cards *(low priority as this is currently available through the admin interface)*
   * Making the database searchable
   * Adding a robust rights management interface *(sharing with a group, sharing through a private URL)*

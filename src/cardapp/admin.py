@@ -1,5 +1,6 @@
 from django.contrib import admin
-from django.utils.html import format_html_join
+from django.utils.html import format_html, format_html_join
+from django.shortcuts import reverse
 from imagekit.admin import AdminThumbnail
 from .models import Tag, Deck, Card, CardMap, CardOnCardMap, AnnotationOnCardMap
 
@@ -61,7 +62,7 @@ class AnnotationInline(admin.TabularInline):
 class CardMapAdmin(admin.ModelAdmin):
     actions = (make_public, make_private)
     list_display = ('__str__', 'author', 'public', 'deck', 'card_count', 'annotation_count', tag_list, 'admin_thumbnail')
-    readonly_fields = ('admin_thumbnail',)
+    readonly_fields = ('admin_thumbnail', 'edit_map_link')
     list_filter = ('author', 'public', 'deck')
     admin_thumbnail = AdminThumbnail(image_field='thumbnail')
     inlines = (CardOnCardMapInline, AnnotationInline,)
@@ -74,3 +75,13 @@ class CardMapAdmin(admin.ModelAdmin):
     
     def get_queryset(self, request):
         return super(CardMapAdmin, self).get_queryset(request).prefetch_related('annotationoncardmap_set', 'cardoncardmap_set', 'tags')
+    
+    def edit_map_link(self, obj):
+        if obj.pk:
+            return format_html(
+                '<h3><a href="{}">{}</a></h3>',
+                reverse('cardapp:cardmap_edit_map', kwargs={'pk':obj.pk}),
+                'Click here to edit card map'
+            )
+        else:
+            return "The card map must be saved before the edit link becomes available"
