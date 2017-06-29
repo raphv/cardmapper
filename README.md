@@ -16,10 +16,47 @@ Take a photo of the table or wall you’ve put the cards on, upload it, and match 
 
 Make your Card Map public: share the link to take away the outcome of the workshop, and add your Card Map to the database to share your insights with other ideation card users.
 
+## How to try it online?
+
+Go to [cardmapper.eu](http://www.cardmapper.eu/)
+
+## How to install it?
+
+1. Clone the repository
+
+```
+git clone https://github.com/raphv/cardmapper
+cd cardmapper
+```
+
+2. Create a virtual environment (you need to install python 3 and virtualenv first), run it and install requirements
+
+```
+cd cardmapper
+virtualenv -p python3 env
+source env/bin/activate
+```
+
+3. Copy and modify the settings to suit your requirements and database backend
+
+```
+cp src/cardmapper/settings.template.py src/cardmapper/settings.py
+nano src/cardmapper/settings.py
+```
+
+4. Synchronize the database, create the demo deck and run Django's built-in development server
+
+```
+cd src
+python manage.py migrate
+python manage.py create_demo_deck
+python manage.py runserver
+```
+
 ## Roadmap
 
 Deck import scripts have been added.
-"Scrapers" to generate decks from existing ideation cards are in a separate repository at [https://github.com/raphv/cardmapper-scrapers/]
+"Scrapers" to generate decks from existing ideation cards are in a [separate repository](https://github.com/raphv/cardmapper-scrapers/)
 
 Future work includes:
 

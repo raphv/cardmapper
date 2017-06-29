@@ -39,15 +39,18 @@
                         <li class="{% block cardmap_list_active %}{% endblock %}">
                             <a href="{% url 'cardapp:cardmap_list' %}">All Card Maps</a>
                         </li>
+                    {% if request.user.is_authenticated %}
                         <li class="{% block cardmap_my_list_active %}{% endblock %}">
                             <a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a>
                         </li>
+                    {% endif %}
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li>
-                            <a href="https://github.com/raphv/cardmapper/" target="_blank">Source Code</a>
+                            <a href="https://github.com/raphv/cardmapper/" target="_blank">GitHub</a>
                         </li>
-                    </div>
+                    </ul>
+                </div>
             </div>
         </nav>
     {% endblock %}
