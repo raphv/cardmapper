@@ -138,5 +138,81 @@ $(function () {
             event.preventDefault();
         }
     });
+    
+    var current_item = null;
+    var $dragged_copy = null;
+    var origin_touch_x = null;
+    var origin_touch_y = null;
+    var original_offset = null;
+    function endMove() {
+        if ($dragged_copy) {
+            $dragged_copy.remove();
+            $(current_item).css("opacity", 1);
+        }
+        current_item = null;
+        $dragged_copy = null;
+    }
+    function moveCopy(touch_x, touch_y) {
+        $dragged_copy.css({
+            "left": (original_offset.left + touch_x - origin_touch_x) + "px",
+            "top": (original_offset.top + touch_y - origin_touch_y) + "px",
+        });
+    }
+    $(window).on("touchmove", function (event) {
+        if ($dragged_copy) {
+            var touches = event.originalEvent.touches;
+            if (touches.length == 1) {
+                moveCopy(touches[0].clientX, touches[0].clientY);
+            } else {
+                endMove();
+            }
+        }
+    }).on("touchend", function () {
+        if ($dragged_copy) {
+            var $map = $("#edit_map");
+            var map_off = $map.offset();
+            var dc_offset = $dragged_copy.offset();
+            var x = dc_offset.left + $dragged_copy.width() / 2;
+            var y = dc_offset.top + $dragged_copy.height() / 2;
+            if (x >= map_off.left
+                && x <= (map_off.left + $map.width())
+                && y >= map_off.top
+                && y <= (map_off.top + $map.height())) {
+                var card_title = $dragged_copy.find("h4").text();
+                var card_id = $dragged_copy.attr("data-card-id");
+                var coords = map.mouseEventToLatLng({ "clientX": x, "clientY": y });
+                addMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);
+            }
+            endMove();
+        }
+    });
+    $("div.draggable-card-item").on('touchstart', function (event) {
+        var touches = event.originalEvent.touches;
+        if (touches.length == 1) {
+            current_item = this;
+            origin_touch_x = touches[0].clientX;
+            origin_touch_y = touches[0].clientY;
+        }
+    }).on('touchmove', function (event) {
+        var touches = event.originalEvent.touches;
+        if (current_item == this && !$dragged_copy && touches.length == 1) {
+            var touch_x = touches[0].clientX;
+            if (origin_touch_x - touch_x > 5) { // Must have sufficiently moved left
+                var $original = $(current_item);
+                original_offset = $original.offset();
+                $dragged_copy = $original.clone();
+                $dragged_copy.css({
+                    "position": "absolute",
+                    "z-index": 1200,
+                    "width": $original.width(),
+                    "height": $original.height(),
+                    "box-sizing": "border-box",
+                    "opacity": .7,
+                }).appendTo("body");
+                moveCopy(touch_x, touches[0].clientY);
+                $original.css("opacity", .2);
+            }
+        }
+    });
 
 });
