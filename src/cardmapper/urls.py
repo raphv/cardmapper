@@ -21,6 +21,7 @@ from django.views.generic.base import RedirectView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^cardapp/', include('cardapp.urls')),
+    url(r'^accounts/', include('allauth.urls')),
     url(r'^$', RedirectView.as_view(pattern_name='cardapp:home')),
 ]
 

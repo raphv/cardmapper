@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -42,6 +43,8 @@ INSTALLED_APPS = [
     'imagekit',
     'colorful',
     'cardapp',
+    'allauth',
+    'allauth.account', # Must be declared after cardapp so its templates can be overridden
 ]
 
 MIDDLEWARE = [
@@ -133,5 +136,19 @@ MEDIA_ROOT = BASE_STATIC_AND_MEDIA_DIR + '/media/'
 MEDIA_URL = BASE_URL + '/media/'
 
 SITE_ID = 1
+
+# ALLAUTH-RELATED SETTINGS
+
+LOGIN_REDIRECT_URL = "/cardapp/"
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION  = 'none'
+ACCOUNT_LOGOUT_ON_GET = True
 
 # Settings for other apps

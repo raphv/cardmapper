@@ -19,10 +19,7 @@
 
 {% block header_title %}{{object.title}}{% endblock %}
 
-{% block next_breadcrumbs %}
-<li><a href="{% url 'cardapp:cardmap_list' %}">Card maps</a></li>
-<li><a href="{% url 'cardapp:cardmap_detail' pk=object.pk %}">{{object.title}}</a></li>
-{% endblock %}
+{% block header %}{% endblock %}
 
 {% block page_content %}
 
