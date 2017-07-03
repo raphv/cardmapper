@@ -22,6 +22,20 @@ Go to [cardmapper.eu](http://www.cardmapper.eu/)
 
 ## How to install it?
 
+### Requirements
+
+This is an app created with the Python-based Django web framework for the back-end, Bootstrap (presentation), jQuery (effects), and Leaflet (maps) on the front-end.
+
+Django 1.11 is the last version to be compatible with Python 2.7 and will be supported until 2020.
+I have used Python 3 throughout development.
+I have **not** done anything to make cardmapper compatible with Python 2.
+If you need Python 2 compatibility, [check the Django documentation](https://docs.djangoproject.com/en/1.11/topics/python3/)
+
+If running via Apache and ModWSGI, make sure you install the `libapache2-mod-wsgi-py3` module and **not** the (Python 2-compatible) `libapache2-mod-wsgi-py3`.
+If you wish to run it on Windows 10, I strongly recommend using the "Ubuntu on Windows" subsystem.
+
+### Install procedure
+
 1. Clone the repository
 
 ```
@@ -75,14 +89,19 @@ Connect to `http://127.0.0.1:8000/admin/` to log in and create your own decks an
     * [IDEO Method Cards](https://www.ideo.com/post/method-cards)
 	* [MethodKit](https://methodkit.com/)
 
-## Roadmap
+## Newest features
+
+Self-service account creation has been enabled.
+At the moment, you can only use your self-service account to create card maps from existing decks.
+If you want to create your own deck, contact me and I'll give your account additional privileges
 
 Deck import scripts have been added.
 "Scrapers" to generate decks from existing ideation cards are in a [separate repository](https://github.com/raphv/cardmapper-scrapers/)
 
+## Roadmap
+
 Future work includes:
 
-  * Adding user registration *(will be done using django-allauth)*
   * Simplifying tag input with jquery-tagit
   * Adding/editing annotations
   * Nicer markers on card maps

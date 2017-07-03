@@ -139,7 +139,8 @@ SITE_ID = 1
 
 # ALLAUTH-RELATED SETTINGS
 
-LOGIN_REDIRECT_URL = "/cardapp/"
+LOGIN_URL = BASE_URL + "/accounts/login/"
+LOGIN_REDIRECT_URL = BASE_URL + "/cardapp/"
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
@@ -150,5 +151,6 @@ ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION  = 'none'
 ACCOUNT_LOGOUT_ON_GET = True
+ACCOUNT_LOGOUT_REDIRECT_URL = BASE_URL + "/cardapp/"
 
 # Settings for other apps

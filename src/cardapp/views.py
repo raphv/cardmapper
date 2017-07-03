@@ -1,9 +1,9 @@
 import json
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView
 from django.urls import reverse
@@ -111,8 +111,31 @@ class CardmapDetailView(VisibleToUserDetailView):
             'y': card.y,
             'id': card.id,
             'title': card.card.title,
-        } for card in context['object'].cardoncardmap_set.all()])
+        } for card in context['object'].cardoncardmap_set.select_related('card').all()])
         return context
+
+def cardmap_json(request, pk=None):
+    cardmap = get_object_or_404(CardMap,pk=pk)
+    if not cardmap.public and cardmap.author != self.request.user:
+        raise PermissionDenied
+    resdata = {
+        'title': cardmap.title,
+        'description': cardmap.description_text,
+        'tags': cardmap.tag_list,
+        'image': request.build_absolute_uri(cardmap.image.url),
+        'cards': [{
+            'title': card.card.title,
+            'description': card.card.description_text,
+            'tags': card.card.tag_list,
+            'image': request.build_absolute_uri(card.card.image.url),
+            'x': card.x,
+            'y': card.y,
+        } for card in cardmap.cardoncardmap_set.select_related('card').all()]
+    }
+    return HttpResponse(
+        json.dumps(resdata,indent=2),
+        content_type="application/json"
+    )
 
 @method_decorator(login_required, name='dispatch')
 class CardmapCreateView(CreateView):
@@ -196,3 +219,4 @@ class CardmapEditMapView(DetailView):
             'title': card.card.title,
         } for card in context['object'].cardoncardmap_set.all()])
         return context
+
