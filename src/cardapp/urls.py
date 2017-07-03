@@ -14,7 +14,7 @@ urlpatterns = [
     url(r'^cardmaps/own/$', views.MyCardmapsListView.as_view(), name='cardmap_my_list'),
     url(r'^cardmaps/create/$', views.CardmapCreateView.as_view(), name='cardmap_create'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/$', views.CardmapDetailView.as_view(), name='cardmap_detail'),
-    url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/json/$', views.cardmap_json, name='cardmap_detail'),
+    url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/json/$', views.cardmap_json, name='cardmap_json'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/edit/metadata/$', views.CardmapEditMetadataView.as_view(), name='cardmap_edit_metadata'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/edit/map/$', views.CardmapEditMapView.as_view(), name='cardmap_edit_map'),
 ]
