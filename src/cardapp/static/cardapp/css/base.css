@@ -17,3 +17,15 @@ body {
 .octocat:hover {
     fill: #ffffff;
 }
+
+@media (min-width: 768px) and (max-width: 992px) {
+    .grid .col-sm-6:nth-child(2n+1) {
+        clear: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .grid .col-md-4:nth-child(3n+1) {
+        clear: left;
+    }
+}

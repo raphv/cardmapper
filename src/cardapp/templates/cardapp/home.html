@@ -7,7 +7,7 @@
     <div class="jumbotron">
         <p>A platform for capturing, annotating and sharing card-based ideation workshops!</p>
     </div>
-    <div class="row">
+    <div class="row grid">
         <div class="col-sm-4">
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -46,7 +46,7 @@
         Latest Card Maps:
     </h2>
 {% with collapse_details=True %}
-    <div class="row">
+    <div class="row grid">
         {% for object in latest_cardmaps %}
         {% include "cardapp/partial/cardmap_list_detail.html" %}
         {% endfor %}
@@ -64,7 +64,7 @@
         {% endif %}
         Latest Decks:
     </h2>
-    <div class="row">
+    <div class="row grid">
     {% for object in latest_decks %}
         {% include "cardapp/partial/deck_list_detail.html" %}
     {% endfor %}

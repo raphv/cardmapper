@@ -10,7 +10,7 @@
 
 {% block main_content %}
 <h3>{{object_list.count}} deck{{object_list.count|pluralize}}</h3>
-<div class="row">
+<div class="row grid">
     {% for object in object_list %}
     {% include "cardapp/partial/deck_list_detail.html" %}
     {% endfor %}

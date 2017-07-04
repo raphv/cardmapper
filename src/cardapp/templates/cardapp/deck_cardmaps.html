@@ -12,7 +12,7 @@
 
 {% block main_content %}
 <h3>{{cardmaps.count}} card map{{cardmaps.count|pluralize}} based on this deck</h3>
-<div class="row">
+<div class="row grid">
     {% for object in cardmaps %}
     {% include "cardapp/partial/cardmap_list_detail.html" %}
     {% endfor %}
