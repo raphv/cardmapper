@@ -60,7 +60,7 @@ $(function () {
     $('div.draggable-card-item').on('dragstart', function (event) {
         var $this = $(this);
         event.originalEvent.dataTransfer.setData('application/card-id', $this.attr("data-card-id"));
-        event.originalEvent.dataTransfer.setData('application/card-title', $this.find("h4").text());
+        event.originalEvent.dataTransfer.setData('application/card-title', $this.find(".card-title").text());
         event.originalEvent.dataTransfer.effectAllowed = 'copy';
     });
 
@@ -82,7 +82,7 @@ $(function () {
     $("button.add-to-map-center").click(function () {
         var $card = $(this).parents("div.draggable-card-item");
         var map_center = map.getCenter();
-        var card_title = $card.find("h4").text();
+        var card_title = $card.find(".card-title").text();
         var card_id = $card.attr("data-card-id");
         addMarkerToMap(card_id, card_title, map_center.lng, map_center.lat, true);
     });
@@ -100,9 +100,20 @@ $(function () {
 
     function removeHighlights() {
         $("div.draggable-card-item span.highlight").each(function () {
-            var $h4 = $(this).parent();
-            $h4.text($h4.text());
+            var $highlightParent = $(this).parent();
+            $highlightParent.text($highlightParent.text());
         });
+    }
+
+    function highlightElement($element, val) {
+        var el_text = $element.text();
+        var pos = el_text.toLowerCase().indexOf(val);
+        if (pos >= 0) {
+            $element.empty();
+            $element.append(el_text.substr(0, pos));
+            $element.append($("<span>").addClass("highlight").text(el_text.substr(pos, val.length)));
+            $element.append(el_text.substr(pos + val.length));
+        }
     }
 
     $("#search-field").on("input", function () {
@@ -113,16 +124,8 @@ $(function () {
                 var $this = $(this);
                 if ($this.attr("data-search-index").indexOf(val) >= 0) {
                     $this.show();
-                    var $h4 = $this.find("h4");
-                    var h4_text = $h4.text();
-                    var pos = h4_text.toLowerCase().indexOf(val);
-                    if (pos >= 0) {
-                        var $new = $("<h4>");
-                        $new.append(h4_text.substr(0, pos));
-                        $new.append($("<span>").addClass("highlight").text(h4_text.substr(pos, val.length)));
-                        $new.append(h4_text.substr(pos + val.length));
-                        $h4.replaceWith($new);
-                    }
+                    highlightElement($this.find(".card-title"), val);
+                    highlightElement($this.find(".card-tags"), val);
                 } else {
                     $this.hide();
                 }
@@ -178,7 +181,7 @@ $(function () {
                 && x <= (map_off.left + $map.width())
                 && y >= map_off.top
                 && y <= (map_off.top + $map.height())) {
-                var card_title = $dragged_copy.find("h4").text();
+                var card_title = $dragged_copy.find(".card-title").text();
                 var card_id = $dragged_copy.attr("data-card-id");
                 var coords = map.mouseEventToLatLng({ "clientX": x, "clientY": y });
                 addMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);

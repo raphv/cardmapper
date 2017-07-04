@@ -219,6 +219,9 @@ class Card(MetadataModel):
 
     def __str__(self):
         return "%s (in %s)"%(self.title, self.deck.title)
+    
+    class Meta:
+        ordering = ['title']
 
 class CardMap(MetadataModel):
     deck = models.ForeignKey(

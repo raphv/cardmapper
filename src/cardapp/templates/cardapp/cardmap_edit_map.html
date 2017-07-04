@@ -33,21 +33,26 @@
 </div>
 <div id="edit_bar">
     <div class="container-fluid">
-        <div class="alert alert-success">
-            <h5>Drag and drop cards from this list onto the map</h5>
+        <div class="alert alert-success alert-dismissible">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p>Drag and drop cards from this list onto the map</p>
         </div>
         {% for object in cardlist %}
-        <div class="panel panel-info draggable-card-item" draggable="true" data-card-id="{{object.id}}" data-search-index="{{object.title|lower}} {{object.get_tag_texts|lower}}">
-            <div class="panel-body" style="border: 10px solid {{object.background_color}};">
-                <h4>{{object.title}}</h4>
-                <button class="btn btn-sm btn-primary btn-block" data-toggle="modal" data-target="#card_modal_{{object.id}}">
-                    <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
-                    Details
-                </button>
-                <button class="btn btn-sm btn-success btn-block add-to-map-center">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    Add to map
-                </button>
+        <div class="panel draggable-card-item" draggable="true" data-card-id="{{object.id}}" data-search-index="{{object.title|lower}} {{object.get_tag_texts|lower}}">
+            <div class="panel-body card-body" style="border-color: {{object.background_color}};">
+                <h4 class="card-title">{{object.title}}</h4>
+                <h6>
+                    <span class="glyphicon glyphicon-tags" aria-hidden="true"></span>
+                    <span class="card-tags">{{object.get_tag_texts}}</span>
+                </h6>
+                <div class="text-center">
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#card_modal_{{object.id}}" title="Details">
+                        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
+                    </button>
+                    <button class="btn btn-success add-to-map-center" title="Add to Map Center">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    </button>
+                </div>
             </div>
         </div>
         {% endfor %}

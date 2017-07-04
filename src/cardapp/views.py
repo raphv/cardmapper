@@ -1,4 +1,5 @@
 import json
+from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, get_object_or_404
@@ -118,20 +119,24 @@ def cardmap_json(request, pk=None):
     cardmap = get_object_or_404(CardMap,pk=pk)
     if not cardmap.public and cardmap.author != self.request.user:
         raise PermissionDenied
-    resdata = {
-        'title': cardmap.title,
-        'description': cardmap.description_text,
-        'tags': cardmap.tag_list,
-        'image': request.build_absolute_uri(cardmap.image.url),
-        'cards': [{
-            'title': card.card.title,
-            'description': card.card.description_text,
-            'tags': card.card.tag_list,
-            'image': request.build_absolute_uri(card.card.image.url),
-            'x': card.x,
-            'y': card.y,
-        } for card in cardmap.cardoncardmap_set.select_related('card').all()]
-    }
+    resdata = OrderedDict([
+        ('title', cardmap.title),
+        ('description', cardmap.description_text),
+        ('tags', cardmap.tag_list),
+        ('image', request.build_absolute_uri(cardmap.image.url)),
+        ('width', cardmap.image_width),
+        ('height', cardmap.image_height),
+        ('cards', [
+            OrderedDict([
+                ('title', card.card.title),
+                ('description', card.card.description_text),
+                ('tags', card.card.tag_list),
+                ('image', request.build_absolute_uri(card.card.image.url)),
+                ('x', card.x),
+                ('y', card.y),
+            ])
+            for card in cardmap.cardoncardmap_set.select_related('card').all()])
+    ])
     return HttpResponse(
         json.dumps(resdata,indent=2),
         content_type="application/json"

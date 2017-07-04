@@ -41,3 +41,18 @@
 span.highlight {
     background-color: #ffff80;
 }
+
+div.panel.draggable-card-item {
+    margin-bottom: 12px;
+}
+
+div.panel-body.card-body {
+    border-style: solid;
+    border-width: 8px;
+    padding: 8px;
+}
+
+h4.card-title {
+    font-weight: bold;
+    margin-top: 0;
+}
