@@ -131,7 +131,7 @@ def cardmap_json(request, pk=None):
                 ('title', card.card.title),
                 ('description', card.card.description_text),
                 ('tags', card.card.tag_list),
-                ('image', request.build_absolute_uri(card.card.image.url)),
+                ('image', request.build_absolute_uri(card.card.image.url) if card.card.image else None),
                 ('x', card.x),
                 ('y', card.y),
             ])
