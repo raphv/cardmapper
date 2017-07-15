@@ -11,7 +11,8 @@
     window.IMAGE_URL = "{{object.image.url}}";
     window.IMAGE_WIDTH = {{object.image_width|default:1000}};
     window.IMAGE_HEIGHT = {{object.image_height|default:1000}};
-    window.CARDS_JSON = {{cards_json|safe}};
+    window.CARDS_JSON = {{cards_json | safe }};
+    window.ANNOTATIONS_JSON = {{annotations_json | safe }};
 </script>
 <script src="{% static 'cardapp/js/cardmap_detail.js' %}"></script>
 {% endblock %}

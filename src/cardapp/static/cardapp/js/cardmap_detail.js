@@ -22,4 +22,16 @@ $(function () {
             $('#card_modal_' + card.id).modal('show');
         });
     });
+
+    window.ANNOTATIONS_JSON.forEach(function (annotation) {
+        var marker = L.marker([annotation.y, annotation.x]);
+        marker.bindPopup(annotation.content);
+        marker.addTo(map);
+        marker.on('mouseover', function () {
+            marker.openPopup();
+        });
+        marker.on('mouseout', function () {
+            marker.closePopup();
+        });
+    });
 });

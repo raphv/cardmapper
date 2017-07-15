@@ -4,27 +4,27 @@ $(function () {
         minZoom: -5
     });
     var bounds = [[0, 0], [window.IMAGE_HEIGHT, window.IMAGE_WIDTH]];
-    var finalData = [];
+    var finalData = {
+        "annotations": [],
+        "cards": [],
+    };
     var mapHasChanged = false;
 
     L.imageOverlay(window.IMAGE_URL, bounds).addTo(map);
     map.fitBounds(bounds);
 
-    function removeMarker(marker) {
-        var markerIndex = finalData.indexOf(marker._card_data);
-        if (markerIndex >= 0) {
-            finalData.splice(markerIndex,1);
-            map.removeLayer(marker);
-            mapHasChanged = true;
-        }
-    }
-
-    function addMarkerToMap(card_id, card_title, x, y, open_popup) {
+    function addCardMarkerToMap(card_id, card_title, x, y, open_popup) {
         var marker = L.marker(
             [y, x],
             { "draggable": true }
         );
-        var $popup = $("#popup-template").clone();
+        var $popup = $("#card-template").clone();
+        var card_data = {
+            "card_id": card_id,
+            "x": x,
+            "y": y
+        };
+        finalData.cards.push(card_data);
         $popup.removeAttr("id")
         $popup.find("h3").text(card_title);
         $popup.find("button.popup-modal").click(function () {
@@ -32,25 +32,66 @@ $(function () {
             return false;
         });
         $popup.find("button.popup-remove").click(function () {
-            removeMarker(marker);
+            var card_index = finalData.cards.indexOf(card_data);
+            if (card_index >= 0) {
+                finalData.cards.splice(card_index, 1);
+                map.removeLayer(marker);
+                mapHasChanged = true;
+            }
             return false;
         });
         marker.bindPopup($popup[0]);
-        marker.addTo(map);
-        marker._card_data = {
-            "card_id": card_id,
-            "x": x,
-            "y": y
-        }
+        marker.addTo(map); 
         marker.on("dragstart", function (event) {
             mapHasChanged = true;
         });
         marker.on("dragend", function (event) {
             var yx = marker.getLatLng();
-            marker._card_data.x = yx.lng;
-            marker._card_data.y = yx.lat;
+            card_data.x = yx.lng;
+            card_data.y = yx.lat;
         });
-        finalData.push(marker._card_data);
+        if (open_popup) {
+            marker.openPopup();
+        }
+        return marker;
+    }
+
+    function addAnnotationMarkerToMap(content, x, y, open_popup) {
+        var marker = L.marker(
+            [y, x],
+            { "draggable": true }
+        );
+        var $popup = $("#annotation-template").clone();
+        var annotation_data = {
+            "content": content,
+            "x": x,
+            "y": y
+        };
+        finalData.annotations.push(annotation_data);
+        $popup.removeAttr("id")
+        $popup.find("textarea").val(content).on("input", function () {
+            annotation_data.content = $(this).val();
+            mapHasChanged = true;
+        });
+        $popup.find("button.popup-remove").click(function () {
+            var card_index = finalData.annotations.indexOf(annotation_data);
+            if (card_index >= 0) {
+                finalData.annotations.splice(card_index, 1);
+                map.removeLayer(marker);
+                mapHasChanged = true;
+            }
+            return false;
+        });
+        marker.bindPopup($popup[0]);
+        marker.addTo(map);
+        marker.on("dragstart", function (event) {
+            mapHasChanged = true;
+        });
+        marker.on("dragend", function (event) {
+            var yx = marker.getLatLng();
+            annotation_data.x = yx.lng;
+            annotation_data.y = yx.lat;
+        });
         if (open_popup) {
             marker.openPopup();
         }
@@ -71,12 +112,22 @@ $(function () {
         var card_id = event.originalEvent.dataTransfer.getData("application/card-id");
         var card_title = event.originalEvent.dataTransfer.getData("application/card-title");
         var coords = map.mouseEventToLatLng(event.originalEvent);
-        addMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);
+        addCardMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);
         mapHasChanged = true;
     });
 
     window.CARDS_JSON.forEach(function (card) {
-        addMarkerToMap(card.card_id, card.title, card.x, card.y);
+        addCardMarkerToMap(card.card_id, card.title, card.x, card.y);
+    });
+
+    window.ANNOTATIONS_JSON.forEach(function (annotation) {
+        addAnnotationMarkerToMap(annotation.content, annotation.x, annotation.y);
+    });
+
+    map.doubleClickZoom.disable();
+    map.on("dblclick", function (event) {
+        var p = event.latlng;
+        addAnnotationMarkerToMap("", p.lng, p.lat, true);
     });
 
     $("button.add-to-map-center").click(function () {
@@ -84,7 +135,7 @@ $(function () {
         var map_center = map.getCenter();
         var card_title = $card.find(".card-title").text();
         var card_id = $card.attr("data-card-id");
-        addMarkerToMap(card_id, card_title, map_center.lng, map_center.lat, true);
+        addCardMarkerToMap(card_id, card_title, map_center.lng, map_center.lat, true);
     });
 
     $("#update-form").submit(function () {
@@ -184,7 +235,7 @@ $(function () {
                 var card_title = $dragged_copy.find(".card-title").text();
                 var card_id = $dragged_copy.attr("data-card-id");
                 var coords = map.mouseEventToLatLng({ "clientX": x, "clientY": y });
-                addMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);
+                addCardMarkerToMap(card_id, card_title, coords.lng, coords.lat, true);
             }
             endMove();
         }

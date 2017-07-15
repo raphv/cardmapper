@@ -34,7 +34,8 @@
     padding: 10px;
 }
 
-#popup-template {
+#annotation-template,
+#card-template {
     display: none;
 }
 
@@ -55,4 +56,11 @@ div.panel-body.card-body {
 h4.card-title {
     font-weight: bold;
     margin-top: 0;
+}
+
+textarea.annotation-area {
+    width: 240px;
+    height: 100px;
+    font-size: 13px;
+    resize: none;
 }

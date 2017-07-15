@@ -12,7 +12,8 @@
     window.IMAGE_URL = "{{object.image.url}}";
     window.IMAGE_WIDTH = {{object.image_width|default:1000}};
     window.IMAGE_HEIGHT = {{object.image_height|default:1000}};
-    window.CARDS_JSON = {{cards_json|safe}};
+    window.CARDS_JSON = {{cards_json | safe }};
+    window.ANNOTATIONS_JSON = {{annotations_json | safe }};
 </script>
 <script src="{% static 'cardapp/js/cardmap_edit.js' %}"></script>
 {% endblock %}
@@ -36,6 +37,7 @@
         <div class="alert alert-success alert-dismissible">
             <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p>Drag and drop cards from this list onto the map</p>
+            <p>Double-click the map to add an annotation</p>
         </div>
         {% for object in cardlist %}
         <div class="panel draggable-card-item" draggable="true" data-card-id="{{object.id}}" data-search-index="{{object.title|lower}} {{object.get_tag_texts|lower}}">
@@ -65,12 +67,20 @@
         <button type="submit" class="btn btn-block btn-primary">Save</button>
     </form>
 </div>
-<div id="popup-template">
+<div id="card-template">
     <h3>[Title]</h3>
     <button class="btn btn-sm btn-primary btn-block popup-modal">
         <span class="glyphicon glyphicon-question-sign" aria-hidden="true"></span>
         Details
     </button>
+    <button class="btn btn-sm btn-danger btn-block popup-remove">
+        <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+        Delete
+    </button>
+</div>
+<div id="annotation-template">
+    <h3>Annotation</h3>
+    <textarea class="annotation-area" placeholder="Write an annotation"></textarea>
     <button class="btn btn-sm btn-danger btn-block popup-remove">
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
         Delete

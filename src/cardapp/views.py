@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView
 from django.urls import reverse
-from .models import Deck, CardMap, Card, CardOnCardMap, filter_visible_to_user
+from .models import Deck, CardMap, Card, CardOnCardMap, AnnotationOnCardMap, filter_visible_to_user
 from .forms import CardMapForm
 
 class VisibleToUserListView(ListView):
@@ -113,6 +113,11 @@ class CardmapDetailView(VisibleToUserDetailView):
             'id': card.id,
             'title': card.card.title,
         } for card in context['object'].cardoncardmap_set.select_related('card').all()])
+        context['annotations_json'] = json.dumps([{
+            'x': annotation.x,
+            'y': annotation.y,
+            'content': annotation.content,
+        } for annotation in context['object'].annotationoncardmap_set.all()])
         return context
 
 def get_image_url(obj, request):
@@ -138,10 +143,20 @@ def cardmap_json(request, pk=None):
                 ('description', card.card.description_text),
                 ('tags', card.card.tag_list),
                 ('image', get_image_url(card.card, request)),
+                ('url', request.build_absolute_uri(card.card.get_absolute_url())),
                 ('x', card.x),
                 ('y', card.y),
             ])
-            for card in cardmap.cardoncardmap_set.select_related('card').all()])
+            for card in cardmap.cardoncardmap_set.select_related('card').all()
+        ]),
+        ('annotations', [
+            OrderedDict([
+                ('content', annotation.content),
+                ('x', annotation.x),
+                ('y', annotation.y),
+            ])
+            for annotation in cardmap.annotationoncardmap_set.all()
+        ]),
     ])
     return HttpResponse(
         json.dumps(resdata,indent=2),
@@ -201,6 +216,7 @@ class CardmapEditMapView(DetailView):
         try:
             data = json.loads(self.request.POST['data'])
             cardmap.cardoncardmap_set.all().delete()
+            cardmap.annotationoncardmap_set.all().delete()
             CardOnCardMap.objects.bulk_create([
                 CardOnCardMap(
                     cardmap = cardmap,
@@ -208,7 +224,16 @@ class CardmapEditMapView(DetailView):
                     x = card['x'],
                     y = card['y'],
                 )
-                for card in data
+                for card in data['cards']
+            ])
+            AnnotationOnCardMap.objects.bulk_create([
+                AnnotationOnCardMap(
+                    cardmap = cardmap,
+                    content = annotation['content'],
+                    x = annotation['x'],
+                    y = annotation['y'],
+                )
+                for annotation in data['annotations']
             ])
         except:
             return HttpResponseBadRequest()
@@ -229,5 +254,10 @@ class CardmapEditMapView(DetailView):
             'card_id': str(card.card.id),
             'title': card.card.title,
         } for card in context['object'].cardoncardmap_set.all()])
+        context['annotations_json'] = json.dumps([{
+            'x': annotation.x,
+            'y': annotation.y,
+            'content': annotation.content,
+        } for annotation in context['object'].annotationoncardmap_set.all()])
         return context
 
