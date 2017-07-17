@@ -91,9 +91,12 @@ Connect to `http://127.0.0.1:8000/admin/` to log in and create your own decks an
 
 ## Newest features
 
+Annotations can be added to card maps.
+
 Self-service account creation has been enabled.
 At the moment, you can only use your self-service account to create card maps from existing decks.
-If you want to create your own deck, contact me and I'll give your account additional privileges
+If you want to create your own deck, contact me and I'll give your account additional privileges.
+Alternatively, clone this repository and set up your own Cardmapper platform.
 
 Deck import scripts have been added.
 "Scrapers" to generate decks from existing ideation cards are in a [separate repository](https://github.com/raphv/cardmapper-scrapers/)
@@ -103,8 +106,6 @@ Deck import scripts have been added.
 Future work includes:
 
   * Simplifying tag input with jquery-tagit
-  * Adding/editing annotations
-  * Nicer markers on card maps
   * Adding an authoring interface for decks and cards *(low priority as this is currently available through the admin interface)*
   * Making the database searchable
   * Adding a robust rights management interface *(sharing with a group, sharing through a private URL)*

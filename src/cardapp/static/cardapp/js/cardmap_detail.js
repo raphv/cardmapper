@@ -9,7 +9,10 @@ $(function () {
     map.fitBounds(bounds);
 
     window.CARDS_JSON.forEach(function (card) {
-        var marker = L.marker([card.y, card.x]);
+        var marker = L.marker(
+            [card.y, card.x],
+            {icon: window.CARD_ICON}
+        );
         marker.bindPopup(card.title);
         marker.addTo(map);
         marker.on('mouseover', function () {
@@ -24,7 +27,10 @@ $(function () {
     });
 
     window.ANNOTATIONS_JSON.forEach(function (annotation) {
-        var marker = L.marker([annotation.y, annotation.x]);
+        var marker = L.marker(
+            [annotation.y, annotation.x],
+            { icon: window.ANNOTATION_ICON }
+        );
         marker.bindPopup(annotation.content);
         marker.addTo(map);
         marker.on('mouseover', function () {
@@ -32,6 +38,9 @@ $(function () {
         });
         marker.on('mouseout', function () {
             marker.closePopup();
+        });
+        marker.on('click', function () {
+            $('#annotation_modal_' + annotation.id).modal('show');
         });
     });
 });

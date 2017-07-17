@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.shortcuts import redirect, get_object_or_404
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.template.defaultfilters import truncatechars
 from django.views.decorators.http import require_POST
 from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView
 from django.urls import reverse
@@ -116,7 +117,8 @@ class CardmapDetailView(VisibleToUserDetailView):
         context['annotations_json'] = json.dumps([{
             'x': annotation.x,
             'y': annotation.y,
-            'content': annotation.content,
+            'id': annotation.id,
+            'content': truncatechars(annotation.content,200),
         } for annotation in context['object'].annotationoncardmap_set.all()])
         return context
 

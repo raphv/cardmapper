@@ -13,7 +13,9 @@
     window.IMAGE_HEIGHT = {{object.image_height|default:1000}};
     window.CARDS_JSON = {{cards_json | safe }};
     window.ANNOTATIONS_JSON = {{annotations_json | safe }};
+    window.STATIC_BASE = '{% static "cardapp" %}';
 </script>
+<script src="{% static 'cardapp/js/cardmap_icons.js' %}"></script>
 <script src="{% static 'cardapp/js/cardmap_detail.js' %}"></script>
 {% endblock %}
 
@@ -55,6 +57,21 @@
 </div>
 
 {% endwith %}
+{% endfor %}
+{% for annotation in cardmap.annotationoncardmap_set.all %}
+<div class="modal fade" tabindex="-1" role="dialog" id="annotation_modal_{{annotation.id}}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Annotation</h4>
+            </div>
+            <div class="modal-body">
+                {{annotation.content|linebreaks}}
+            </div>
+        </div>
+    </div>
+</div>
 {% endfor %}
 
 {% endblock %}

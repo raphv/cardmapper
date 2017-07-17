@@ -16,7 +16,10 @@ $(function () {
     function addCardMarkerToMap(card_id, card_title, x, y, open_popup) {
         var marker = L.marker(
             [y, x],
-            { "draggable": true }
+            {
+                "draggable": true,
+                "icon": window.CARD_ICON
+            }
         );
         var $popup = $("#card-template").clone();
         var card_data = {
@@ -59,7 +62,10 @@ $(function () {
     function addAnnotationMarkerToMap(content, x, y, open_popup) {
         var marker = L.marker(
             [y, x],
-            { "draggable": true }
+            {
+                "draggable": true,
+                "icon": window.ANNOTATION_ICON
+            }
         );
         var $popup = $("#annotation-template").clone();
         var annotation_data = {
