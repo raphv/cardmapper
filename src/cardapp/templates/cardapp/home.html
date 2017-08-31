@@ -7,38 +7,6 @@
     <div class="jumbotron">
         <p>A platform for capturing, annotating and sharing card-based ideation workshops!</p>
     </div>
-    <div class="row grid">
-        <div class="col-sm-4">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h3>1. Use ideation cards</h3>
-                </div>
-                <div class="panel-body">
-                    <p>Use printed ideation cards from one of the decks available here. Set up an ideation workshop and use the cards on a table, flipchart, or wall.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="panel panel-success">
-                <div class="panel-heading">
-                    <h3>2. Turn your ideas into a “Card Map”</h3>
-                </div>
-                <div class="panel-body">
-                    <p>Take a photo of the table or wall you’ve put the cards on, upload it, and match the cards to the database.</p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="panel panel-warning">
-                <div class="panel-heading">
-                    <h3>3. Share your “Card Map”</h3>
-                </div>
-                <div class="panel-body">
-                    <p>Make your Card Map public: share the link to take away the outcome of the workshop, and add your Card Map to the database to share your insights with other ideation card users.</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <h2>
         {% if cardmap_count %}
         <a class="btn btn-primary btn-lg pull-right" href="{% url 'cardapp:cardmap_list' %}">List all card maps <span class="badge">{{cardmap_count}}</span></a>
