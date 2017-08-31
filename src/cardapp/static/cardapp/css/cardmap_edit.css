@@ -39,9 +39,6 @@
     display: none;
 }
 
-span.highlight {
-    background-color: #ffff80;
-}
 
 div.panel.draggable-card-item {
     margin-bottom: 12px;

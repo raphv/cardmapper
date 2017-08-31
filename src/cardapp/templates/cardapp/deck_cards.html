@@ -11,6 +11,9 @@
 {% endblock %}
 
 {% block main_content %}
+
+{% include "cardapp/partial/search_list.html" %}
+
 <h3>{{cards.count}} card{{cards.count|pluralize}} in this deck</h3>
 <div class="row grid">
     {% for object in cards %}

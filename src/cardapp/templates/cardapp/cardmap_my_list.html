@@ -17,6 +17,9 @@
         Create a new card map!
     </a>
 </p>
+
+{% include "cardapp/partial/search_list.html" %}
+
 <h3>{{object_list.count}} card map{{object_list.count|pluralize}}</h3>
 <div class="row grid">
     {% for object in object_list %}
