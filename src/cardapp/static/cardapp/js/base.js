@@ -9,6 +9,6 @@ $(function () {
             $children.css("height", maxH);
         });
     }
-    $(window).on("resize", equalizeGrid);
+    $(window).on("resize load", equalizeGrid);
     equalizeGrid();
 });
