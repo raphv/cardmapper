@@ -3,10 +3,8 @@
 <script src="{% static 'cardapp/js/list_search.js' %}"></script>
 
 <form class="pull-right form-inline" aria-hidden="true">
-    <div class="input-group">
-        <div class="input-group-addon">
-            <span class="glyphicon glyphicon-search"></span>
-        </div>
-        <input type="search" class="form-control" id="search-field" placeholder="Search within list" />
+    <div class="input-group has-feedback">
+        <input type="search" class="form-control" id="search-field" placeholder="Search..." title="Search within list" />
+        <span class="glyphicon glyphicon-search form-control-feedback" aria-hidden="true"></span>
     </div>
 </form>

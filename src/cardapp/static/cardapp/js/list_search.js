@@ -3,6 +3,13 @@ $(function () {
     var $win = $(window);
     var $searchableItems = $(".searchable-item");
     var $searchField = $("#search-field");
+    var $formGroup = $searchField.parents(".input-group");
+    var defaultTitle = $searchField.attr("title");
+
+    $searchField.tooltip({
+        placement: "left",
+        animation: false,
+    });
 
     $searchableItems.each(function () {
         var $this = $(this);
@@ -17,12 +24,15 @@ $(function () {
             var $highlightParent = $(this).parent();
             $highlightParent.text($highlightParent.text());
         });
+        $formGroup.removeClass("has-success has-error");
         var val = $searchField.val().toLowerCase();
-        if (val.length > 2) {
+        if (val.length > 1) {
+            var resultCount = 0;
             $searchableItems.each(function () {
                 var $this = $(this);
                 if ($this.attr("data-search-index").indexOf(val) >= 0) {
                     $this.show();
+                    resultCount++;
                     $this.find(".searchable-field").each(function () {
                         var $element = $(this);
                         var el_text = $element.text();
@@ -38,8 +48,12 @@ $(function () {
                     $this.hide();
                 }
             });
+            $formGroup.addClass(resultCount ? "has-success" : "has-error");
+            $searchField.attr("title", resultCount + " item(s) found")
+                .tooltip('fixTitle').tooltip('show');
         } else {
             $searchableItems.show();
+            $searchField.attr("title", defaultTitle).tooltip('fixTitle').tooltip('hide');
         }
         $win.trigger("resize");
     });
