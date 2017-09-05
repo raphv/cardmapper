@@ -11,6 +11,9 @@ from django.views.generic import TemplateView, DetailView, ListView, CreateView,
 from django.urls import reverse
 from .models import Deck, CardMap, Card, CardOnCardMap, AnnotationOnCardMap, filter_visible_to_user
 from .forms import CardMapForm
+# Magellan-specific
+from .models import Tag
+from django.db.models import Count
 
 class VisibleToUserListView(ListView):
 
@@ -123,6 +126,11 @@ class CardmapDetailView(VisibleToUserDetailView):
             'id': annotation.id,
             'content': truncatechars(annotation.content,200),
         } for annotation in context['object'].annotationoncardmap_set.all()])
+        # Magellan-specific
+        context['tags'] =  Tag.objects.filter(
+            card__cardoncardmap__cardmap=context['object']
+        ).annotate(count=Count('card')).order_by('-count').values('name','count')[:10]
+        # End of Magellan-specific
         return context
 
 def get_image_url(obj, request):

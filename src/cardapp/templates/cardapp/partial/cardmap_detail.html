@@ -29,4 +29,20 @@
     </th>
     <td>{{object.annotationoncardmap_set.count}} annotations on this map</td>
 </tr>
+<tr>
+    <th>
+        <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+        Most used card tags:
+    </th>
+    <td>
+        <ul>
+            {% for tag in tags %}
+            <li>
+                <strong>{{tag.name}}</strong>
+                <em>({{tag.count}})</em>
+            </li>
+            {% endfor %}
+        </ul>
+    </td>
+</tr>
 {% endblock %}
