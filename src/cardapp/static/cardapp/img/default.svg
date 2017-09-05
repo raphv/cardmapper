@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1200" viewBox="0 0 1600 1200">
+	<defs>
+		<pattern id="diagonal" width="100" height="100" patternUnits="userSpaceOnUse">
+			<rect x="0" y="0" width="100" height="100" fill="#ffffff" stroke="#cccccc" stroke-width="1" />
+			<text x="50" y="55" font-size="20" font-family="sans-serif" transform="rotate(-45 50,50)" text-anchor="middle" fill="#cccccc">
+				CardMapper
+			</text>
+		</pattern>
+	</defs>
+	<rect x="0" y="0" width="100%" height="100%" fill="url(#diagonal)" />
+</svg>

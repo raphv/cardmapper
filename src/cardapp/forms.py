@@ -20,7 +20,7 @@ class CustomBaseForm(forms.ModelForm):
 
 class CardMapForm(CustomBaseForm):
 
-    image = forms.ImageField(required=True)
+    image = forms.ImageField(required=False)
     user = None
 
     def __init__(self, *args, **kwargs):

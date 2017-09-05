@@ -9,9 +9,21 @@ $(function () {
     map.fitBounds(bounds);
 
     window.CARDS_JSON.forEach(function (card) {
+        var icon = window.CARD_ICON;
+        if (card.icon) {
+            icon = L.icon({
+                iconUrl: card.icon,
+                iconSize: [card.icon_width, card.icon_height],
+                iconAnchor: [card.icon_width / 2, card.icon_height / 2],
+                popupAnchor: [0, -card.icon_height / 2],
+                shadowUrl: window.STATIC_BASE + '/img/shadow.svg',
+                shadowSize: [card.icon_width + 6, card.icon_height + 6],
+                shadowAnchor: [card.icon_width / 2 + 3, card.icon_height / 2 + 3],
+            });
+        }
         var marker = L.marker(
             [card.y, card.x],
-            {icon: window.CARD_ICON}
+            {icon: icon}
         );
         marker.bindPopup(card.title);
         marker.addTo(map);
