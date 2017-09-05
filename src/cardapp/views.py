@@ -113,9 +113,9 @@ class CardmapDetailView(VisibleToUserDetailView):
             'y': card.y,
             'id': card.id,
             'title': card.card.title,
-            'icon': card.card.icon.url,
-            'icon_width': card.card.icon.width,
-            'icon_height': card.card.icon.height,
+            'icon': card.card.icon.url if card.card.image else None,
+            'icon_width': card.card.icon.width if card.card.image else None,
+            'icon_height': card.card.icon.height if card.card.image else None,
         } for card in context['object'].cardoncardmap_set.select_related('card').all()])
         context['annotations_json'] = json.dumps([{
             'x': annotation.x,
