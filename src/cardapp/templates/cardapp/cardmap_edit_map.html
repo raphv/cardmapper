@@ -9,9 +9,13 @@
 
 <link rel="stylesheet" href="{% static 'cardapp/css/cardmap_edit.css' %}" />
 <script>
+    {% if object.image %}
     window.IMAGE_URL = "{{object.image.url}}";
-    window.IMAGE_WIDTH = {{object.image_width |default:1000 }};
-    window.IMAGE_HEIGHT = {{object.image_height |default:1000 }};
+    {% else %}
+    window.IMAGE_URL = "{% static 'cardapp/img/default.svg' %}";
+    {% endif %}
+    window.IMAGE_WIDTH = {{object.image_width |default:1600 }};
+    window.IMAGE_HEIGHT = {{object.image_height |default:1200 }};
     window.CARDS_JSON = {{cards_json | safe }};
     window.ANNOTATIONS_JSON = {{annotations_json | safe }};
     window.STATIC_BASE = '{% static "cardapp" %}';

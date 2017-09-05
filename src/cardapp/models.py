@@ -209,6 +209,11 @@ class Card(MetadataModel):
         on_delete = models.CASCADE,
         related_name = "cards"
     )
+    icon = ImageSpecField(source='image',
+        processors=[ResizeToFit(80, 80, False)],
+        format='JPEG',
+        options={'quality': 80}
+    )
 
     def get_all_cardmaps(self):
         return CardMap.objects.filter(cardoncardmap__card=self)
