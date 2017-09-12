@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import uuid
-from html.parser import HTMLParser
 from urllib.parse import urlsplit
 from django.conf import settings
 from django.db import models
-from django.template.defaultfilters import truncatechars
 from django.utils.html import strip_tags, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.functional import cached_property
@@ -14,6 +12,7 @@ from colorful.fields import RGBColorField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 from ckeditor.fields import RichTextField
+from .utils import process_description, process_short_description
 
 class Tag(models.Model):
     name = models.CharField(
@@ -130,7 +129,7 @@ class MetadataModel(models.Model):
     
     @property
     def description_text(self):
-        return HTMLParser().unescape(strip_tags(self.description))
+        return process_description(self.description)
 
     @description_text.setter
     def description_text(self, value):
@@ -141,7 +140,7 @@ class MetadataModel(models.Model):
         )
     
     def get_short_description(self):
-        return truncatechars(self.description_text,200)
+        return mark_safe(process_short_description(self.description))
 
     @property
     def tag_list(self):
