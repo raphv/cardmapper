@@ -15,6 +15,9 @@ from .forms import CardMapForm
 from .models import Tag
 from django.db.models import Count
 from .forms import CardMapJsonForm
+from PIL import Image, ImageDraw
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 class VisibleToUserListView(ListView):
 
@@ -202,13 +205,36 @@ def cardmap_import_json(request):
         form = CardMapJsonForm(request.POST, request.FILES)
         if form.is_valid():
             cardmap_data = form.cleaned_data['cardmap_data']
-            cardmap = CardMap.objects.create(
+            cardmap = CardMap(
                 title = cardmap_data.get('title'),
                 description = cardmap_data.get('description'),
                 deck = cardmap_data['cards'][0]['card'].deck,
                 public = form.cleaned_data.get('public', True),
                 author = request.user,
             )
+            if form.cleaned_data['image']:
+                cardmap.image = form.cleaned_data['image']
+            elif 'width' in cardmap_data and 'height' in cardmap_data:
+                width = int(float(cardmap_data['width']))
+                height = int(float(cardmap_data['height']))
+                tmp_image = Image.new(
+                    'RGB',
+                    (width,height),
+                    (200,200,200)
+                )
+                img_draw = ImageDraw.Draw(tmp_image)
+                for k in range(0, width, 50):
+                    img_draw.line((k,0,k,height),fill=(255,255,255))
+                for k in range(0, height, 50):
+                    img_draw.line((0,k,width,k),fill=(255,255,255))
+                tmp_bytes = BytesIO()
+                tmp_image.save(tmp_bytes,'PNG')
+                cardmap.image.save(
+                    'blank-%dx%d.png'%(width,height),
+                    ContentFile(tmp_bytes.getvalue()),
+                    save=False
+                )
+            cardmap.save()
             for card in cardmap_data['cards']:
                 CardOnCardMap.objects.create(
                     card = card['card'],

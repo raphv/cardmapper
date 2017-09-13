@@ -48,7 +48,7 @@ class CardMapJsonForm(forms.Form):
     )
     image = forms.ImageField(
         label = 'Background image',
-        help_text = '(optional - CURRENTLY UNUSED)',
+        help_text = '(optional)',
         required = False,
     )
     public = forms.BooleanField(
