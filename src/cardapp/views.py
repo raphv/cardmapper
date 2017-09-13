@@ -7,8 +7,8 @@ from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.template.defaultfilters import truncatechars
 from django.views.decorators.http import require_POST
-from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView
-from django.urls import reverse
+from django.views.generic import TemplateView, DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse, reverse_lazy
 from .models import Deck, CardMap, Card, CardOnCardMap, AnnotationOnCardMap, filter_visible_to_user
 from .forms import CardMapForm
 # Magellan-specific
@@ -308,3 +308,15 @@ class CardmapEditMapView(DetailView):
         } for annotation in context['object'].annotationoncardmap_set.all()])
         return context
 
+@method_decorator(login_required, name='dispatch')
+class CardmapDeleteView(DeleteView):
+
+    template_name = "cardapp/cardmap_confirm_delete.html"
+    model = CardMap
+    success_url = reverse_lazy('cardapp:cardmap_my_list')
+
+    def get_object(self, *args, **kwargs):
+        obj = super(CardmapDeleteView, self).get_object(*args, **kwargs)
+        if obj.author != self.request.user:
+            raise PermissionDenied
+        return obj
