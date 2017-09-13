@@ -1,0 +1,24 @@
+{% extends 'cardapp/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}Card Map: “{{object.title}}”: Delete{% endblock %}
+{% block header_title %}Delete “{{object.title}}”{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_detail' pk=object.pk %}">{{object.title}}</a></li>
+<li><a href="{% url 'cardapp:cardmap_delete' pk=object.pk %}">Delete Cardmap</a></li>
+{% endblock %}
+
+{% block main_content %}
+<h2>Are you sure you want to delete this card map?</h2>
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-lg btn-danger">
+        {% bootstrap_icon 'trash' %}
+        Yes, delete this card map
+    </button>
+</form>
+{% endblock %}
