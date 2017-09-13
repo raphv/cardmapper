@@ -2,7 +2,7 @@ import json
 from collections import OrderedDict
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import redirect, get_object_or_404, render
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.template.defaultfilters import truncatechars
@@ -14,6 +14,7 @@ from .forms import CardMapForm
 # Magellan-specific
 from .models import Tag
 from django.db.models import Count
+from .forms import CardMapJsonForm
 
 class VisibleToUserListView(ListView):
 
@@ -152,6 +153,7 @@ def cardmap_json(request, pk=None):
         ('height', cardmap.image_height),
         ('cards', [
             OrderedDict([
+                ('magellan_id', card.card.magellan_id),
                 ('title', card.card.title),
                 ('description', card.card.description_text),
                 ('tags', card.card.tag_list),
@@ -193,6 +195,38 @@ class CardmapCreateView(CreateView):
         res = super(CardmapCreateView, self).get_form_kwargs(*args, **kwargs)
         res['user'] = self.request.user
         return res
+
+@login_required
+def cardmap_import_json(request):
+    if request.method == 'POST':
+        form = CardMapJsonForm(request.POST, request.FILES)
+        if form.is_valid():
+            cardmap_data = form.cleaned_data['cardmap_data']
+            cardmap = CardMap.objects.create(
+                title = cardmap_data.get('title'),
+                description = cardmap_data.get('description'),
+                deck = cardmap_data['cards'][0]['card'].deck,
+                public = form.cleaned_data.get('public', True),
+                author = request.user,
+            )
+            for card in cardmap_data['cards']:
+                CardOnCardMap.objects.create(
+                    card = card['card'],
+                    cardmap = cardmap,
+                    x = card['x'],
+                    y = card['y'],
+                )
+            return redirect(
+                'cardapp:cardmap_detail',
+                pk = cardmap.pk
+            )
+    else:
+        form = CardMapJsonForm()
+    return render(
+        request,
+        "cardapp/cardmap_import_json.html",
+        {'form': form}
+    )
 
 @method_decorator(login_required, name='dispatch')
 class CardmapEditMetadataView(UpdateView):

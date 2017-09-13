@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^cardmaps/all/$', views.CardmapListView.as_view(), name='cardmap_list'),
     url(r'^cardmaps/own/$', views.MyCardmapsListView.as_view(), name='cardmap_my_list'),
     url(r'^cardmaps/create/$', views.CardmapCreateView.as_view(), name='cardmap_create'),
+    url(r'^cardmaps/import/json/$', views.cardmap_import_json, name='cardmap_import_json'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/$', views.CardmapDetailView.as_view(), name='cardmap_detail'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/json/$', views.cardmap_json, name='cardmap_json'),
     url(r'^cardmaps/(?P<pk>[0-9a-f-]+)/edit/metadata/$', views.CardmapEditMetadataView.as_view(), name='cardmap_edit_metadata'),

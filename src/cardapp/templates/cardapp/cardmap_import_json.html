@@ -1,0 +1,23 @@
+{% extends 'cardapp/base.html' %}
+{% load bootstrap3 %}
+{% load staticfiles %}
+
+{% block title %}Import card map from JSON{% endblock %}
+{% block header_title %}CardMapper: Import card map from JSON{% endblock %}
+
+{% block next_breadcrumbs %}
+<li><a href="{% url 'cardapp:cardmap_list' %}">Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_my_list' %}">My Card Maps</a></li>
+<li><a href="{% url 'cardapp:cardmap_import_json' %}">Import a Card Map from JSON</a></li>
+{% endblock %}
+
+{% block main_content %}
+<form method="POST" enctype="multipart/form-data">
+    {{form.media}}
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <p class="text-right">
+        <button type="submit" class="btn btn-lg btn-primary">Import Card Map</button>
+    </p>
+</form>
+{% endblock %}

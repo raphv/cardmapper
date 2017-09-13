@@ -213,7 +213,15 @@ class Card(MetadataModel):
         format='JPEG',
         options={'quality': 80}
     )
-
+    
+    magellan_id = models.CharField(
+        max_length = 40,
+        blank = True,
+        null = True,
+        default = None,
+        unique = True,
+    )
+    
     def get_all_cardmaps(self):
         return CardMap.objects.filter(cardoncardmap__card=self)
 
