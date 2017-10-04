@@ -7,7 +7,7 @@
             <div class="panel-body"{% if object.background_color %} style="border: 10px solid {{object.background_color}};"{% endif %}>
                 {{object.get_description_html}}
                 {% block image %}
-                {% if object.image %}
+                {% if object.medium_image %}
                 <img src="{{object.medium_image.url}}" class="img-responsive center-block" />
                 {% endif %}
                 {% endblock %}

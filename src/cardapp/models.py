@@ -241,6 +241,9 @@ class CardMap(MetadataModel):
         on_delete=models.CASCADE,
         related_name = 'cardmaps',
     )
+    # Preventing crashes
+    thumbnail = ''
+    medium_image = ''
 
 class ThingOnCardMap(models.Model):
     cardmap = models.ForeignKey(
