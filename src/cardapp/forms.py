@@ -85,6 +85,7 @@ class CardMapJsonForm(forms.Form):
                 search_tbl.append(('magellan_id', card['magellan_id']))
             if 'title' in card:
                 search_tbl.append(('title', card['title']))
+                search_tbl.append(('magellan_id', card['title']))
             try:
                 float(card.get('x'))
                 float(card.get('y'))
