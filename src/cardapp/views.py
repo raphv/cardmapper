@@ -157,7 +157,7 @@ def cardmap_json(request, pk=None):
         ('image', get_image_url(cardmap, request)),
         ('width', cardmap.image_width),
         ('height', cardmap.image_height),
-        ('deck', OrdderedDict([
+        ('deck', OrderedDict([
             ('id', cardmap.deck.id),
             ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
             ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
@@ -232,7 +232,7 @@ def all_cardmaps_json(request, pk=None):
             ('title', cardmap.title),
             ('tags', cardmap.tag_list),
             ('author', cardmap.author.username if cardmap.author else None),
-            ('deck', OrdderedDict([
+            ('deck', OrderedDict([
                 ('id', cardmap.deck.id),
                 ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
                 ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
