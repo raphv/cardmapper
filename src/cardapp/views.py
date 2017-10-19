@@ -148,20 +148,25 @@ def cardmap_json(request, pk=None):
     if not cardmap.public and cardmap.author != self.request.user:
         raise PermissionDenied
     resdata = OrderedDict([
+        ('id', cardmap.id),
+        ('url', request.build_absolute_uri(cardmap.build_absolute_url())),
         ('title', cardmap.title),
         ('description', cardmap.description_text),
         ('tags', cardmap.tag_list),
         ('image', get_image_url(cardmap, request)),
         ('width', cardmap.image_width),
         ('height', cardmap.image_height),
+        ('deck', OrdderedDict([
+            ('id', cardmap.deck.id),
+            ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
+            ('title', cardmap.deck.title),
+        ]),
         ('cards', [
             OrderedDict([
+                ('id', card.card.id),
                 ('magellan_id', card.card.magellan_id),
-                ('title', card.card.title),
-                ('description', card.card.description_text),
-                ('tags', card.card.tag_list),
-                ('image', get_image_url(card.card, request)),
                 ('url', request.build_absolute_uri(card.card.get_absolute_url())),
+                ('title', card.card.title),
                 ('x', card.x),
                 ('y', card.y),
             ])
@@ -176,6 +181,55 @@ def cardmap_json(request, pk=None):
             for annotation in cardmap.annotationoncardmap_set.all()
         ]),
     ])
+    return HttpResponse(
+        json.dumps(resdata,indent=2),
+        content_type="application/json"
+    )
+
+def deck_json(request, pk=None):
+    deck = get_object_or_404(Deck,pk=pk)
+    if not deck.public and deck.author != self.request.user:
+        raise PermissionDenied
+    resdata = OrderedDict([
+        ('id', deck.id),
+        ('url', request.build_absolute_uri(deck.get_absolute_url())),
+        ('title', deck.title),
+        ('description', deck.description_text),
+        ('tags', deck.tag_list),
+        ('image', get_image_url(deck, request)),
+        ('cards', [
+            OrderedDict([
+                ('magellan_id', card.magellan_id),
+                ('title', card.title),
+                ('description', card.description_text),
+                ('tags', card.tag_list),
+                ('image', get_image_url(card, request)),
+                ('url', request.build_absolute_uri(card.get_absolute_url())),
+            ])
+            for card in deck.cards.visible_to_user(request.user)
+        ]),
+    ])
+    return HttpResponse(
+        json.dumps(resdata,indent=2),
+        content_type="application/json"
+    )
+
+def all_cardmaps_json(request, pk=None):
+    cardmaps = CardMap.objects.visible_to_user(self.request.user)
+    resdata = [
+        OrderedDict([
+            ('id', cardmap.id),
+            ('url', request.build_absolute_uri(cardmap.build_absolute_url())),
+            ('title', cardmap.title),
+            ('tags', cardmap.tag_list),
+            ('deck', OrdderedDict([
+                ('id', cardmap.deck.id),
+                ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
+                ('title', cardmap.deck.title),
+            ]),
+        ])
+        for cardmap in cardmaps
+    ]
     return HttpResponse(
         json.dumps(resdata,indent=2),
         content_type="application/json"
