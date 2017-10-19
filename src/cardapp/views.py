@@ -145,14 +145,15 @@ def get_image_url(obj, request):
 
 def cardmap_json(request, pk=None):
     cardmap = get_object_or_404(CardMap,pk=pk)
-    if not cardmap.public and cardmap.author != self.request.user:
+    if not cardmap.public and cardmap.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
         ('id', cardmap.id),
-        ('url', request.build_absolute_uri(cardmap.build_absolute_url())),
+        ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
         ('title', cardmap.title),
         ('description', cardmap.description_text),
         ('tags', cardmap.tag_list),
+        ('author', cardmap.author.username if cardmap.author else None),
         ('image', get_image_url(cardmap, request)),
         ('width', cardmap.image_width),
         ('height', cardmap.image_height),
@@ -189,7 +190,7 @@ def cardmap_json(request, pk=None):
 
 def deck_json(request, pk=None):
     deck = get_object_or_404(Deck,pk=pk)
-    if not deck.public and deck.author != self.request.user:
+    if not deck.public and deck.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
         ('id', deck.id),
@@ -206,6 +207,9 @@ def deck_json(request, pk=None):
                 ('tags', card.tag_list),
                 ('image', get_image_url(card, request)),
                 ('url', request.build_absolute_uri(card.get_absolute_url())),
+                ('times_used', CardMap.objects.visible_to_user(request.user).filter(
+                    cardoncardmap__card=card
+                ).distinct().count()),
             ])
             for card in deck.cards.visible_to_user(request.user)
         ]),
@@ -216,20 +220,26 @@ def deck_json(request, pk=None):
     )
 
 def all_cardmaps_json(request, pk=None):
-    cardmaps = CardMap.objects.visible_to_user(self.request.user)
+    cardmaps = CardMap.objects.visible_to_user(request.user).annotate(
+        card_count=Count('cardoncardmap'),
+        annotation_count=Count('annotationoncardmap')
+    )
     resdata = [
         OrderedDict([
             ('id', cardmap.id),
-            ('url', request.build_absolute_uri(cardmap.build_absolute_url())),
+            ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
             ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
             ('title', cardmap.title),
             ('tags', cardmap.tag_list),
+            ('author', cardmap.author.username if cardmap.author else None),
             ('deck', OrdderedDict([
                 ('id', cardmap.deck.id),
                 ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
                 ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
                 ('title', cardmap.deck.title),
             ])),
+            ('card_count', card_count),
+            ('annotation_count', annotation_count),
         ])
         for cardmap in cardmaps
     ]
