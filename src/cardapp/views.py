@@ -220,13 +220,15 @@ def all_cardmaps_json(request, pk=None):
         OrderedDict([
             ('id', cardmap.id),
             ('url', request.build_absolute_uri(cardmap.build_absolute_url())),
+            ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id})),
             ('title', cardmap.title),
             ('tags', cardmap.tag_list),
             ('deck', OrdderedDict([
                 ('id', cardmap.deck.id),
                 ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
+                ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id})),
                 ('title', cardmap.deck.title),
-            ]),
+            ])),
         ])
         for cardmap in cardmaps
     ]
