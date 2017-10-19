@@ -148,7 +148,7 @@ def cardmap_json(request, pk=None):
     if not cardmap.public and cardmap.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
-        ('id', cardmap.id.hex),
+        ('id', str(cardmap.id)),
         ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
         ('title', cardmap.title),
         ('description', cardmap.description_text),
@@ -158,14 +158,14 @@ def cardmap_json(request, pk=None):
         ('width', cardmap.image_width),
         ('height', cardmap.image_height),
         ('deck', OrderedDict([
-            ('id', cardmap.deck.id.hex),
+            ('id', str(cardmap.deck.id)),
             ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
-            ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
+            ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
             ('title', cardmap.deck.title),
         ])),
         ('cards', [
             OrderedDict([
-                ('id', card.card.id.hex),
+                ('id', str(card.card.id)),
                 ('magellan_id', card.card.magellan_id),
                 ('url', request.build_absolute_uri(card.card.get_absolute_url())),
                 ('title', card.card.title),
@@ -193,7 +193,7 @@ def deck_json(request, pk=None):
     if not deck.public and deck.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
-        ('id', deck.id.hex),
+        ('id', str(deck.id)),
         ('url', request.build_absolute_uri(deck.get_absolute_url())),
         ('title', deck.title),
         ('description', deck.description_text),
@@ -201,12 +201,13 @@ def deck_json(request, pk=None):
         ('image', get_image_url(deck, request)),
         ('cards', [
             OrderedDict([
+                ('id', str(card.id)),
                 ('magellan_id', card.magellan_id),
+                ('url', request.build_absolute_uri(card.get_absolute_url())),
                 ('title', card.title),
                 ('description', card.description_text),
                 ('tags', card.tag_list),
                 ('image', get_image_url(card, request)),
-                ('url', request.build_absolute_uri(card.get_absolute_url())),
                 ('times_used', CardMap.objects.visible_to_user(request.user).filter(
                     cardoncardmap__card=card
                 ).distinct().count()),
@@ -226,14 +227,14 @@ def all_cardmaps_json(request, pk=None):
     )
     resdata = [
         OrderedDict([
-            ('id', cardmap.id.hex),
+            ('id', str(cardmap.id)),
             ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
             ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
             ('title', cardmap.title),
             ('tags', cardmap.tag_list),
             ('author', cardmap.author.username if cardmap.author else None),
             ('deck', OrderedDict([
-                ('id', cardmap.deck.id.hex),
+                ('id', str(cardmap.deck.id)),
                 ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
                 ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
                 ('title', cardmap.deck.title),
