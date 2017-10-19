@@ -160,7 +160,7 @@ def cardmap_json(request, pk=None):
             ('id', cardmap.deck.id),
             ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
             ('title', cardmap.deck.title),
-        ]),
+        ])),
         ('cards', [
             OrderedDict([
                 ('id', card.card.id),
