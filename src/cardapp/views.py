@@ -148,7 +148,7 @@ def cardmap_json(request, pk=None):
     if not cardmap.public and cardmap.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
-        ('id', cardmap.id),
+        ('id', cardmap.id.hex),
         ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
         ('title', cardmap.title),
         ('description', cardmap.description_text),
@@ -158,14 +158,14 @@ def cardmap_json(request, pk=None):
         ('width', cardmap.image_width),
         ('height', cardmap.image_height),
         ('deck', OrderedDict([
-            ('id', cardmap.deck.id),
+            ('id', cardmap.deck.id.hex),
             ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
             ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
             ('title', cardmap.deck.title),
         ])),
         ('cards', [
             OrderedDict([
-                ('id', card.card.id),
+                ('id', card.card.id.hex),
                 ('magellan_id', card.card.magellan_id),
                 ('url', request.build_absolute_uri(card.card.get_absolute_url())),
                 ('title', card.card.title),
@@ -193,7 +193,7 @@ def deck_json(request, pk=None):
     if not deck.public and deck.author != request.user:
         raise PermissionDenied
     resdata = OrderedDict([
-        ('id', deck.id),
+        ('id', deck.id.hex),
         ('url', request.build_absolute_uri(deck.get_absolute_url())),
         ('title', deck.title),
         ('description', deck.description_text),
@@ -226,14 +226,14 @@ def all_cardmaps_json(request, pk=None):
     )
     resdata = [
         OrderedDict([
-            ('id', cardmap.id),
+            ('id', cardmap.id.hex),
             ('url', request.build_absolute_uri(cardmap.get_absolute_url())),
             ('json_url', request.build_absolute_uri(reverse('cardapp:cardmap_json',kwargs={'pk':cardmap.id}))),
             ('title', cardmap.title),
             ('tags', cardmap.tag_list),
             ('author', cardmap.author.username if cardmap.author else None),
             ('deck', OrderedDict([
-                ('id', cardmap.deck.id),
+                ('id', cardmap.deck.id.hex),
                 ('url', request.build_absolute_uri(cardmap.deck.get_absolute_url())),
                 ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
                 ('title', cardmap.deck.title),
