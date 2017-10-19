@@ -212,7 +212,7 @@ def deck_json(request, pk=None):
                     cardoncardmap__card=card
                 ).distinct().count()),
             ])
-            for card in deck.cards.visible_to_user(request.user)
+            for card in deck.cards.visible_to_user(request.user).order_by('magellan_id')
         ]),
     ])
     return HttpResponse(
@@ -239,8 +239,8 @@ def all_cardmaps_json(request, pk=None):
                 ('json_url', request.build_absolute_uri(reverse('cardapp:deck_json',kwargs={'pk':cardmap.deck.id}))),
                 ('title', cardmap.deck.title),
             ])),
-            ('card_count', card_count),
-            ('annotation_count', annotation_count),
+            ('card_count', cardmap.card_count),
+            ('annotation_count', cardmap.annotation_count),
         ])
         for cardmap in cardmaps
     ]
