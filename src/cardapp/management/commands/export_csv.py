@@ -1,4 +1,7 @@
-import csv
+try:
+    import unicodecsv as csv
+except:
+    import csv
 import argparse
 from django.db.models import Count
 from django.core.management.base import BaseCommand
@@ -10,7 +13,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             'file',
-            type = argparse.FileType('w'),
+            type = argparse.FileType('w+b'),
             help = "A CSV file to write"
         )
 
